@@ -4,7 +4,9 @@
         let navIteams = [
             {name: "Home", href: "/"},
             {name: "User", href: "/user"},
-            {name: "article", href: "/article"}
+            {name: "article", href: "/article"},
+            {name: "signup", href: "/signup"},
+            {name: "login", href: "/login"},
         ];
 
     function randomNotification() {
