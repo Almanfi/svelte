@@ -3,6 +3,7 @@ import { fail, redirect } from "@sveltejs/kit";
 import { generateId } from "lucia";
 import { Argon2id } from "oslo/password";
 import type { Actions } from "./$types";
+import { Prisma as prisma } from "$lib/server/prisma";
 
 
 export const actions: Actions = {

@@ -1,6 +1,7 @@
 import { lucia } from "$lib/server/lucia";
 import { fail, redirect } from "@sveltejs/kit";
 import { Argon2id } from "oslo/password";
+import { Prisma as prisma } from "$lib/server/prisma";
 
 import type { Actions } from "./$types";
 
@@ -10,6 +11,7 @@ export const actions: Actions = {
 		const formData = await event.request.formData();
 		const username = formData.get("username");
 		const password = formData.get("password");
+		console.log("login page : ", username, password);
 
 		const existingUser = await prisma.authUser.findUnique({
             where: {
