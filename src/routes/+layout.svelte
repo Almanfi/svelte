@@ -1,13 +1,11 @@
 <script>
-        import "../app.css";
-        import Navbar from "$lib/navbar.svelte";
-        let navIteams = [
-            {name: "Home", href: "/"},
-            {name: "User", href: "/user"},
-            {name: "article", href: "/article"},
-            {name: "signup", href: "/signup"},
-            {name: "login", href: "/login"},
-        ];
+    import "../app.css";
+    import Navbar from "$lib/navbar.svelte";
+    let navIteams = [
+        {name: "Home", href: "/"},
+        {name: "article", href: "/article"},
+    ];
+    export let data = {};
 
     function randomNotification() {
         const notifTitle = "notification 2";
@@ -32,8 +30,7 @@
 
 </script>
 
-<Navbar {navIteams} />
-
-<button on:click={allowNotifications}>new notification</button>
+<Navbar {navIteams} {data} />
+<!-- <button on:click={allowNotifications}>new notification</button> -->
 
 <slot></slot>

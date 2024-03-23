@@ -1,12 +1,3 @@
-// import type { PageServerLoad, Actions } from "./$types";
-// import { fail, redirect } from "@sveltejs/kit";
-
-// export const load: PageServerLoad = async (event) => {
-// 	if (!event.locals.user) redirect(302, "/login");
-// 	return {
-// 		username: event.locals.user.username
-// 	};
-// };
 import { lucia } from "$lib/server/lucia";
 import { fail, redirect } from "@sveltejs/kit";
 
@@ -17,7 +8,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	logout: async (event) => {
+	default: async (event) => {
+        console.log("default");
 		if (!event.locals.session) {
 			return fail(401);
 		}
