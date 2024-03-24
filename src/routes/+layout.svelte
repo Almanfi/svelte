@@ -29,8 +29,11 @@
 };
 import { ModeWatcher } from "mode-watcher";
 	import Container from "$lib/container.svelte";
+	import LeftPanel from "$lib/leftPanel.svelte";
 
 </script>
+
+<!-- <LeftPanel /> -->
 
 <ModeWatcher />
 <Navbar {navIteams} {data} />

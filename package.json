@@ -36,8 +36,9 @@
 	"dependencies": {
 		"@lucia-auth/adapter-prisma": "^4.0.1",
 		"@prisma/client": "^5.10.2",
-		"bits-ui": "^0.20.0",
+		"bits-ui": "^0.20.1",
 		"clsx": "^2.1.0",
+		"cmdk-sv": "^0.0.16",
 		"dotenv": "^16.4.5",
 		"lucide-svelte": "^0.302.0",
 		"mode-watcher": "^0.3.0",
