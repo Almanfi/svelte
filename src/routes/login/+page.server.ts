@@ -8,6 +8,7 @@ import type { Actions } from "./$types";
 export const actions: Actions = {
 
 	default: async (event) => {
+		console.log("login page : ", event);
 		const formData = await event.request.formData();
 		const username = formData.get("username");
 		const password = formData.get("password");

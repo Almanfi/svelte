@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import "../app.css";
     import Navbar from "$lib/navbar.svelte";
     let navIteams = [
@@ -27,10 +27,14 @@
         }
   });
 };
+import { ModeWatcher } from "mode-watcher";
+	import Container from "$lib/container.svelte";
 
 </script>
 
+<ModeWatcher />
 <Navbar {navIteams} {data} />
+
 <!-- <button on:click={allowNotifications}>new notification</button> -->
 
 <slot></slot>
