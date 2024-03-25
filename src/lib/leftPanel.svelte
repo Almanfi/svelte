@@ -7,6 +7,7 @@
     const navIteams = [
         {name: "Home", href: "/"},
         {name: "article", href: "/article"},
+        {name: "client", href: "/client"},
     ];
     const side = "left";
 </script>
