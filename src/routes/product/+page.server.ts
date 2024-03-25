@@ -23,7 +23,7 @@ export const actions: Actions = {
         
         try {
             const id = generateId(15);
-            const newProduct = await prisma.product.create({
+            const newProduct = await Prisma.product.create({
                 data: {
                     id,
                     name,
