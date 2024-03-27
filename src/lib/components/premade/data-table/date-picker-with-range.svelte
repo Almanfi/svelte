@@ -24,13 +24,13 @@
 	let startValue: DateValue | undefined = undefined;
 </script>
 
-<div class="grid gap-2">
+<div class="grid gap-2 sm:w-full">
 	<Popover.Root openFocus>
 		<Popover.Trigger asChild let:builder>
 			<Button
 				variant="outline"
 				class={cn(
-					"w-[300px] justify-start text-left font-normal",
+					"w-60 justify-start text-left font-normal",
 					!value && "text-muted-foreground"
 				)}
 				builders={[builder]}
