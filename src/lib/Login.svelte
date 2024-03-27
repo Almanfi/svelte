@@ -4,9 +4,9 @@
       authMethod: "username",
       password: "password"
     };
-    export let ApiPath = "/login";
-    let email = '';
-    let password = '';
+    // export let ApiPath = "/login";
+    // let email = '';
+    // let password = '';
 
     function validate(event) {
       console.log('handleSubmit called');

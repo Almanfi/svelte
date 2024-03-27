@@ -3,7 +3,7 @@
 	export let data;
 	import { enhance } from '$app/forms';
 	import { onMount, onDestroy } from 'svelte';
-	import DarkMode from './darkMode.svelte';
+	import DarkMode from '$lib/components/premade/darkMode.svelte';
 	import UserMenu from './userMenu.svelte';
 	import LeftPanel from './leftPanel.svelte';
   import * as Avatar from "$lib/components/ui/avatar";

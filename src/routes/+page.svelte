@@ -12,12 +12,16 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 
-	import DarkMode from '$lib/darkMode.svelte';
+	import DarkMode from '$lib/components/premade/darkMode.svelte';
 	import Container from '$lib/container.svelte';
+	import { DashboardPage } from '$lib/dashboard';
 </script>
 
-<main>
+<!-- <main>
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <TableDate />
   </div>
-</main>
+</main> -->
+
+
+<DashboardPage />

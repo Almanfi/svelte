@@ -2,6 +2,7 @@ import { Dialog as DialogPrimitive } from "bits-ui";
 
 const Root = DialogPrimitive.Root;
 const Trigger = DialogPrimitive.Trigger;
+const Close = DialogPrimitive.Close;
 
 import Title from "./dialog-title.svelte";
 import Portal from "./dialog-portal.svelte";
@@ -21,6 +22,7 @@ export {
 	Overlay,
 	Content,
 	Description,
+	Close,
 	//
 	Root as Dialog,
 	Title as DialogTitle,
@@ -31,4 +33,5 @@ export {
 	Overlay as DialogOverlay,
 	Content as DialogContent,
 	Description as DialogDescription,
+	Close as DialogClose,
 };

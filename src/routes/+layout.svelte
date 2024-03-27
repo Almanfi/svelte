@@ -27,17 +27,13 @@
         }
   });
 };
-import { ModeWatcher } from "mode-watcher";
-	import Container from "$lib/container.svelte";
-	import LeftPanel from "$lib/leftPanel.svelte";
+    import { ModeWatcher } from "mode-watcher";
+    import { DashboardHeader } from '$lib/dashboard';
 
 </script>
 
-<!-- <LeftPanel /> -->
 
 <ModeWatcher />
-<Navbar {navIteams} {data} />
-
-<!-- <button on:click={allowNotifications}>new notification</button> -->
+<DashboardHeader {data}/>
 
 <slot></slot>
