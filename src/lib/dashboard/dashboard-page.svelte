@@ -29,18 +29,20 @@
 			<div class="flex items-center justify-between space-x-2">
 				<DatePickerWithRange />
 				<Button size="sm">
-					<Download class="mr-2 h-4 w-4" />
-					Download
+					<Download class="md:mr-2 mr-0 h-4 w-4" />
+					<p class="max-[400px]:hidden">
+						Download
+					</p>
 				</Button>
 			</div>
 		</div>
 		<Tabs.Root value="overview" class="space-y-4">
 			<div class="w-full flex items-center justify-center md:justify-normal">
 				<Tabs.List class="w-fit">
-					<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-					<Tabs.Trigger value="analytics" disabled>Analytics</Tabs.Trigger>
-					<Tabs.Trigger value="reports" disabled>Reports</Tabs.Trigger>
-					<Tabs.Trigger value="notifications" disabled>Notifications</Tabs.Trigger>
+					<Tabs.Trigger class="px-1 sm:px-3" value="overview">Overview</Tabs.Trigger>
+					<Tabs.Trigger class="px-1 sm:px-3" value="analytics" disabled>Analytics</Tabs.Trigger>
+					<Tabs.Trigger class="px-1 sm:px-3" value="reports" disabled>Reports</Tabs.Trigger>
+					<Tabs.Trigger class="px-1 sm:px-3" value="notifications" disabled>Notifications</Tabs.Trigger>
 				</Tabs.List>
 			</div>
 			<Tabs.Content value="overview" class="space-y-4">
