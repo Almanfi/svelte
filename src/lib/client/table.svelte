@@ -1,5 +1,7 @@
 <script lang="ts">
-    import * as Table from "$lib/components/ui/table/index.js";
+    import { Cell } from "$lib/components/ui/range-calendar";
+import * as Table from "$lib/components/ui/table/index.js";
+	import TableCell from "$lib/components/ui/table/table-cell.svelte";
     import { clients } from "$lib/store";
 
     // export let clients : [{
@@ -31,7 +33,13 @@
           {:else}
           <Table.Cell>0</Table.Cell>
           {/if}
-          <Table.Cell class="text-right"> <a href="/client/{client.id}">{client.id}</a></Table.Cell>
+          <!-- <Table.Cell class="text-right"> <a href="/client/{client.id}">{client.id}</a></Table.Cell> -->
+          <Table.Cell class="text-right"> <a href="/client/{client.id}">edit</a></Table.Cell>
+          <Table.Cell>
+            <form action="?/deleteClient&id={client.id}" method="post">
+                <button type="submit" >delete</button>
+            </form>
+          </Table.Cell>
         </Table.Row>
       {/each}
     </Table.Body>

@@ -5,25 +5,41 @@
     import { Button, buttonVariants } from "$lib/components/ui/button";
     import { enhance, deserialize } from '$app/forms';
     import { clients } from "$lib/store";
+    import { toast } from "svelte-sonner";
+ 
+    // function toasting() {
+    //   toast("Event has been created", {
+    //     description: "Sunday, December 03, 2023 at 9:00 AM",
+    //     action: {
+    //       label: "Undo",
+    //       onClick: () => console.log("Undo")
+    //     }
+    //   })
+    // }
+
     
     let name = '';
     let email = '';
 
-    async function handleSubmit(event) {
-    event.preventDefault();
+    // async function handleSubmit(event) {
+    // event.preventDefault();
+    // // if (form && form.success)
+    //   // console.log(JSON.stringify(form));
+    // // if (form && form.success) form.success();
 
-    let form = new FormData(event.target);
-    const response = await fetch('/client?/createClient', {
-      method: 'post',
-      body: form
-    });
+    // // let form = new FormData(event.target);
+    // // const response = await fetch('/client?/createClient', {
+    // //   method: 'post',
+    // //   body: form
+    // // });
 
-    const data = deserialize(await response.text()).data.body;
-    // Now you can access the response data
+    // // const data = deserialize(await response.text()).data.body;
+    // // // Now you can access the response data
     
-    // Update the clients store
-    $clients = [...$clients, { ...data}];
-    }
+    // // // Update the clients store
+    // // $clients = [...$clients, { ...data}];
+    // console.log("submitted :" + name + " " + email)
+    // }
 
 </script>
 
@@ -32,7 +48,39 @@
       add Client
     </Dialog.Trigger>
       <Dialog.Content class="sm:max-w-[425px]">
-        <form on:submit={handleSubmit} action="/client?/createClient" method="post" use:enhance>
+        <!-- <form on:submit|preventDefault={handleSubmit} action="/client?/createClient" method="post" use:enhance> -->
+        <form action="/client?/createClient" method="post" 
+        use:enhance={({ formData}) => {
+          // `formElement` is this `<form>` element
+          // `formData` is its `FormData` object that's about to be submitted
+          // `action` is the URL to which the form is posted
+          // calling `cancel()` will prevent the submission
+          // `submitter` is the `HTMLElement` that caused the form to be submitted
+          // const plainFormData = Object.fromEntries(formData.entries());
+          // console.log("submitted data in the making: " + JSON.stringify(plainFormData));
+      
+          return async ({ result, update }) => {
+            // `result` is an `ActionResult` object
+            // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
+            if (result.type === "success" && result.data) {
+              console.log("submitted data with success");
+              let newClient = result.data.body;
+              // console.log("returned client data: " + JSON.stringify(newClient));
+              $clients = [...$clients, newClient];
+              update();
+            }
+            else {
+                toast("client creation failed", {
+                description: result.data.message,
+                // action: {
+                //   label: "Undo",
+                //   onClick: () => console.log("Undo")
+                // }
+              })
+              console.log("error: " + JSON.stringify(result));
+            }
+          };
+        }}>
         <!-- <form action="/client?/createClient" method="post" use:enhance> -->
         <Dialog.Header>
           <Dialog.Title>add client</Dialog.Title>

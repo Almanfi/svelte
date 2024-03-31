@@ -20,10 +20,15 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
     createClient: async ( event ) => {
-        const { name, email } = Object.fromEntries(await event.request.formData()) as {
+        let  { name, email } = Object.fromEntries(await event.request.formData()) as {
             name: string,
             email: string,
         };
+        name = name.trim();
+        email = email.trim();
+        if (email === '' || name === ''){
+            return fail(400, { message: 'form data is incorrect' });
+        }
         
         try {
             const id = generateId(15);
@@ -44,27 +49,27 @@ export const actions: Actions = {
             return fail(500, { message: 'Failed to create client' });
         }
     },
-    deleteArticle: async ( event ) => {
+    deleteClient: async ( event ) => {
         const id = event.url.searchParams.get("id");
         if (!id) {
             return fail(400, { message: 'Missing id' });
         }
-        let article = await Prisma.article.findUnique({
+        let client = await Prisma.client.findUnique({
             where: {
-                id: Number(id)
+                id
             }
         });
-        if (!article) {
-            return fail(500, { message: 'Article not found' });
+        if (!client) {
+            return fail(500, { message: 'Client not found' });
         }
-        let userId = event.locals.user.id;
-        if (article.userId !== userId) {
-            return fail(403, { message: 'Unauthorized' });
-        }
+        // let userId = event.locals.user.id;
+        // if (client.userId !== userId) {
+        //     return fail(403, { message: 'Unauthorized' });
+        // }
         try {
-            await Prisma.article.delete({
+            await Prisma.client.delete({
                 where: {
-                    id: Number(id)
+                    id
                 }
             });
             return {
@@ -73,7 +78,7 @@ export const actions: Actions = {
         }
         catch (error) {
             console.log(error);
-            return fail(500, { message: 'Failed to delete article' });
+            return fail(500, { message: 'Failed to delete client' });
         }
     }
 };
