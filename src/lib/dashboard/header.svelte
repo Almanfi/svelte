@@ -19,7 +19,8 @@
     const navIteams = [
         {name: "Home", href: "/"},
         {name: "article", href: "/article"},
-        {name: "client", href: "/client"},
+        {name: "clients", href: "/client"},
+        {name: "products", href: "/product"}
     ];
 </script>
 

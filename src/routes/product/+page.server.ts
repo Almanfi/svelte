@@ -9,7 +9,11 @@ export const load: PageServerLoad = async (event) => {
     if (!event.locals.user) redirect(302, "/login");
     return {
         username : event.locals.user.username,
-        clients : await Prisma.client.findMany()
+        products : await Prisma.product.findMany({
+            include: {
+                versions: true
+            },
+    })
     }
 };
 
@@ -20,9 +24,10 @@ export const actions: Actions = {
             name: string,
             clientId: string,
         };
-        
+
         try {
             const id = generateId(15);
+            const versionId = generateId(15);
             const newProduct = await Prisma.product.create({
                 data: {
                     id,
@@ -34,8 +39,11 @@ export const actions: Actions = {
                     },
                     versions: {
                         create: [
-                            { version: '1.0' },
-                            // add more versions here
+                            {
+                                id: versionId,
+                                version: 1,
+                                note: 'new product just created'
+                            },
                         ],
                     },
                 },
@@ -50,27 +58,23 @@ export const actions: Actions = {
             return fail(500, { message: 'Failed to create client' });
         }
     },
-    deleteArticle: async ( event ) => {
+    deleteProduct: async ( event ) => {
         const id = event.url.searchParams.get("id");
         if (!id) {
             return fail(400, { message: 'Missing id' });
         }
-        let article = await Prisma.article.findUnique({
+        let product = await Prisma.product.findUnique({
             where: {
-                id: Number(id)
+                id: id
             }
         });
-        if (!article) {
-            return fail(500, { message: 'Article not found' });
-        }
-        let userId = event.locals.user.id;
-        if (article.userId !== userId) {
-            return fail(403, { message: 'Unauthorized' });
+        if (!product) {
+            return fail(500, { message: 'product not found' });
         }
         try {
-            await Prisma.article.delete({
+            await Prisma.product.delete({
                 where: {
-                    id: Number(id)
+                    id: id
                 }
             });
             return {
@@ -79,7 +83,7 @@ export const actions: Actions = {
         }
         catch (error) {
             console.log(error);
-            return fail(500, { message: 'Failed to delete article' });
+            return fail(500, { message: 'Failed to delete product' });
         }
     }
 };

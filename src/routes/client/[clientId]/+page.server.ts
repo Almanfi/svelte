@@ -44,19 +44,19 @@ export const load: PageServerLoad = async ({ params }) => {
 }
 
 export const actions: Actions = {
-    updateArticle: async ({ request, params }) => {
-        const { title, content } = Object.fromEntries(await request.formData()) as {
-            title: string,
-            content: string
+    updateClient: async ({ request, params }) => {
+        const { name, email } = Object.fromEntries(await request.formData()) as {
+            name: string,
+            email: string
         };
         try {
-            const article = await Prisma.article.update({
+            const client = await Prisma.client.update({
                 where: {
-                    id: Number(params.articleId)
+                    id: params.clientId
                 },
                 data: {
-                    title,
-                    content
+                    name,
+                    email
                 }
             });
             return {
@@ -65,14 +65,14 @@ export const actions: Actions = {
         }
         catch (err) {
             console.log(err);
-            return error(500, 'Failed to update article');
+            return error(500, 'Failed to update client');
         }
     },
-    deleteArticle: async ({ params }) => {
+    deleteClient: async ({ params }) => {
         try {
-            await Prisma.article.delete({
+            await Prisma.client.delete({
                 where: {
-                    id: Number(params.articleId)
+                    id: params.clientId
                 }
             });
             return {
@@ -81,7 +81,7 @@ export const actions: Actions = {
         }
         catch (err) {
             console.log(err);
-            return error(500, 'Failed to delete article');
+            return error(500, 'Failed to delete client');
         }
     }
 }
