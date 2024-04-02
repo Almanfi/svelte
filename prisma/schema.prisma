@@ -8,16 +8,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// datasource db {
-//   provider = "sqlite"
-//   url      = "file:./dev.sqlite"
-// }
-
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider = "sqlite"
+  url      = "file:./dev.sqlite"
 }
+
+// datasource db {
+//   provider = "postgresql"
+//   url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+//   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+// }
 
 // datasource db {
 //   provider = "postgresql"
@@ -71,9 +71,13 @@ model Version {
   id         String  @id @unique
   version    Int
   note       String
-  atachement String?
   state      String @default("pending")
-  product    Product @relation(fields: [productId], references: [id])
+  atachement String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  startDate  DateTime @default(now())
+  deadline   DateTime?
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId  String
 }
 

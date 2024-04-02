@@ -4,6 +4,7 @@ import { Prisma } from '$lib/server/prisma';
 import { redirect } from '@sveltejs/kit';
 import { lucia } from '$lib/server/lucia';
 import { generateId } from 'lucia';
+import { writeFileSync } from 'fs';
 
 export const load: PageServerLoad = async (event) => {
     if (!event.locals.user) redirect(302, "/login");
@@ -16,11 +17,22 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
     createVersion: async ( event ) => {
-        const { productId } = Object.fromEntries(await event.request.formData()) as {
+        const { productId, startDate, deadline, atachement } = Object.fromEntries(await event.request.formData()) as {
             productId: string,
+            note: string,
+            startDate: string,
+            deadline: string,
+            atachement: File,
         };
-
         try {
+            const atachementName = generateId(15);
+            try {
+            writeFileSync(`static/uploads/${atachementName}`,
+                            Buffer.from(await atachement.arrayBuffer()));
+            } catch (error) {
+                console.log(error);
+                return fail(500, { message: 'Failed to upload file' });
+            }
             if (!productId) {
                 console.log("------productId is undefined------");
                 return fail(400, { message: 'Missing productId' });
@@ -48,6 +60,9 @@ export const actions: Actions = {
                     id,
                     note: 'new version just created',
                     version: newVersionNum,
+                    startDate: startDate,
+                    deadline: deadline,
+                    atachement: atachementName,
                     product: {
                         connect: {
                             id: productId,
