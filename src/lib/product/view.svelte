@@ -153,7 +153,7 @@
             <Label for="startDate">startDate</Label>
             {#if editMode}
             <DatePicker bind:date={startDate} oldDate={formattedDate(versionToDisplay.startDate)} />
-            <input id="startDate" name="starDate" hidden type="text" bind:value={startDate} />
+            <input id="startDate" name="startDate" hidden type="text" bind:value={startDate} />
             {:else}
             <div class=" border rounded-md p-1">
               {formattedDate(versionToDisplay.startDate)}
