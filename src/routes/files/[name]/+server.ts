@@ -14,7 +14,7 @@ export async function GET({ params, url }) {
   // try {
     const data = await fs.readFile(filePath);
   //   // Determine the Content-Type from the file extension
-    const contentType = 'Content-Type: application/pdf';
+    const contentType = 'Content-Type: image/jpeg';
 
   // } catch (error) {
   //   // Handle errors, like file not found

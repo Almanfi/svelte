@@ -23,17 +23,28 @@ export const load: PageServerLoad = async ({ params }) => {
 
 export const actions: Actions = {
     updateVersion: async ({ request, params }) => {
-        const { note, state, atachement, startDate, deadline } = Object.fromEntries(await request.formData()) as {
-            note: string,
-            state: string,
-            startDate: string,
-            deadline: string,
+        const formData: {
+            [k: string]: FormDataEntryValue | undefined;
+        } = Object.fromEntries(await request.formData());
+        for (const key in formData) {
+            if (formData[key] === "") {
+                formData[key] = undefined;
+            }
+        }
+        let { note, state, atachement, startDate, deadline } = formData as {
+            note: string | undefined,
+            state: string | undefined,
+            startDate: string | undefined,
+            deadline: string | undefined,
             atachement: File,
         };
+
         try {
+
             let atachementName;
             let oldVersion;
-            if (atachement) {
+            if (atachement?.size > 0) {
+                console.log("-------- creating ataachment ------------");
                 atachementName = generateId(15);
                 try {
                     writeFileSync(`static/uploads/${atachementName}`,
@@ -42,6 +53,8 @@ export const actions: Actions = {
                     console.log(error);
                     return fail(500, { message: 'Failed to upload file' });
                 }
+                console.log("-------- geting old version ------------");
+                
                 oldVersion = await Prisma.version.findUnique({
                     where: {
                         id: params.versionId
@@ -50,7 +63,10 @@ export const actions: Actions = {
                         atachement: true
                     }
                 });
+                console.log("-------- done geting old version ------------");
             }
+            console.log("-------- updating ------------");
+            
             const version = await Prisma.version.update({
                 where: {
                     id: params.versionId
@@ -63,7 +79,9 @@ export const actions: Actions = {
                     deadline
                 }
             });
+            console.log("-------- done updating ------------");
             if (oldVersion && oldVersion.atachement) {
+                console.log("-------- start deleting old file ------------");
                 unlink(`static/uploads/${oldVersion.atachement}`, (err) => {
                     if (err) {
                         console.error(`Error deleting file: ${err}`);
@@ -71,6 +89,7 @@ export const actions: Actions = {
                         console.log('File deleted successfully');
                     }
                 });
+                console.log("-------- done deleting old file ------------");
             }
             return {
                 status: 200
@@ -83,11 +102,20 @@ export const actions: Actions = {
     },
     deleteVersion: async ({ params }) => {
         try {
-            await Prisma.version.delete({
+            const version = await Prisma.version.delete({
                 where: {
                     id: params.versionId
                 }
             });
+            if (version && version.atachement) {
+                unlink(`static/uploads/${version.atachement}`, (err) => {
+                    if (err) {
+                        console.error(`Error deleting file: ${err}`);
+                    } else {
+                        console.log('File deleted successfully');
+                    }
+                });
+            }
             return {
                 status: 204
             };

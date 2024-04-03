@@ -4,7 +4,7 @@ import { Prisma } from '$lib/server/prisma';
 import { redirect } from '@sveltejs/kit';
 import { lucia } from '$lib/server/lucia';
 import { generateId } from 'lucia';
-import { writeFileSync } from 'fs';
+import { writeFileSync, unlink } from 'fs';
 
 export const load: PageServerLoad = async (event) => {
     if (!event.locals.user) redirect(302, "/login");
@@ -25,13 +25,17 @@ export const actions: Actions = {
             atachement: File,
         };
         try {
-            const atachementName = generateId(15);
-            try {
-            writeFileSync(`static/uploads/${atachementName}`,
-                            Buffer.from(await atachement.arrayBuffer()));
-            } catch (error) {
-                console.log(error);
-                return fail(500, { message: 'Failed to upload file' });
+            let atachementName;
+            if (atachement) {
+                atachementName = generateId(15);
+                try {
+                writeFileSync(`static/uploads/${atachementName}`,
+                                Buffer.from(await atachement.arrayBuffer()));
+                } catch (error) {
+                    console.log(error);
+                    return fail(500, { message: 'Failed to upload file' });
+                }
+
             }
             if (!productId) {
                 console.log("------productId is undefined------");
@@ -99,6 +103,15 @@ export const actions: Actions = {
                     id: id
                 }
             });
+            if (version && version.atachement) {
+                unlink(`static/uploads/${version.atachement}`, (err) => {
+                    if (err) {
+                        console.error(`Error deleting file: ${err}`);
+                    } else {
+                        console.log('File deleted successfully');
+                    }
+                });
+            }
             return {
                 status: 204
             };
