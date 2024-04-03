@@ -17,16 +17,26 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
     createVersion: async ( event ) => {
-        const { productId, startDate, deadline, atachement } = Object.fromEntries(await event.request.formData()) as {
-            productId: string,
-            note: string,
-            startDate: string,
-            deadline: string,
+        const formData: {
+            [k: string]: FormDataEntryValue | undefined;
+        } = Object.fromEntries(await event.request.formData());
+        for (const key in formData) {
+            if (formData[key] === "") {
+                formData[key] = undefined;
+            }
+        }
+        let { note, state, productId, startDate, deadline, atachement } = formData as {
+            note: string | undefined,
+            state: string | undefined,
+            productId: string | undefined,
+            startDate: string | undefined,
+            deadline: string | undefined,
             atachement: File,
         };
+        if (!note) note = 'new version just created';
         try {
             let atachementName;
-            if (atachement) {
+            if (atachement.size > 0) {
                 atachementName = generateId(15);
                 try {
                 writeFileSync(`static/uploads/${atachementName}`,
@@ -62,7 +72,8 @@ export const actions: Actions = {
             const newversion = await Prisma.version.create({
                 data: {
                     id,
-                    note: 'new version just created',
+                    note,
+                    state,
                     version: newVersionNum,
                     startDate: startDate,
                     deadline: deadline,

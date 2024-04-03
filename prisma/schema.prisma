@@ -70,7 +70,7 @@ model Product {
 model Version {
   id         String  @id @unique
   version    Int
-  note       String
+  note       String @default("")
   state      String @default("pending")
   atachement String?
   createdAt  DateTime @default(now())
