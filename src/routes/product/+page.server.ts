@@ -107,6 +107,7 @@ export const actions: Actions = {
             deadline: string | undefined,
             atachement: File,
         };
+        if (!productName) productName = 'New Product';
         if (!note) note = 'a fresh product';
         try {
             let atachementName;
@@ -122,7 +123,7 @@ export const actions: Actions = {
             }
             const productId = generateId(15);
             const versionId = generateId(15);
-            const newProduct = await prisma.product.create({
+            const newProduct = await Prisma.product.create({
                 data: {
                     id: productId,
                     name: productName,
