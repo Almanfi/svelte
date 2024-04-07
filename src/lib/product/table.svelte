@@ -10,11 +10,12 @@
 
 <Table.Root>
   <Table.Caption>A list of available clients.</Table.Caption>
+  <div class="border border-forground rounded-lg w-[90%] text-center mx-auto my-4 max-w-md">
   <Table.Header>
     <Table.Row>
       <Table.Head class="w-[100px]">id</Table.Head>
-      <Table.Head>name</Table.Head>
-      <Table.Head>version</Table.Head>
+      <Table.Head class="w-full text-center">name</Table.Head>
+      <Table.Head class="w-[100px]">version</Table.Head>
     </Table.Row>
   </Table.Header>
   <Table.Body>
@@ -32,4 +33,5 @@
       </Table.Row>
     {/each}
   </Table.Body>
+  </div>
 </Table.Root>

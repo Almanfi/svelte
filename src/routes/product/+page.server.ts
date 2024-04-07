@@ -4,6 +4,7 @@ import { Prisma } from '$lib/server/prisma';
 import { redirect } from '@sveltejs/kit';
 import { lucia } from '$lib/server/lucia';
 import { generateId } from 'lucia';
+import { writeFileSync, unlink } from 'fs';
 
 export const load: PageServerLoad = async (event) => {
     if (!event.locals.user) redirect(302, "/login");
@@ -85,5 +86,74 @@ export const actions: Actions = {
             console.log(error);
             return fail(500, { message: 'Failed to delete product' });
         }
-    }
+    },
+    createFreshProduct: async ( event ) => {
+        const formData: {
+            [k: string]: FormDataEntryValue | undefined;
+        } = Object.fromEntries(await event.request.formData());
+        for (const key in formData) {
+            if (formData[key] === "") {
+                formData[key] = undefined;
+            }
+        }
+        console.log("---------------- createFreshProduct ----------------");
+        console.log(formData);
+        let { clientId, note, state, productName, startDate, deadline, atachement } = formData as {
+            clientId : string | undefined,
+            note: string | undefined,
+            state: string | undefined,
+            productName: string | undefined,
+            startDate: string | undefined,
+            deadline: string | undefined,
+            atachement: File,
+        };
+        if (!note) note = 'a fresh product';
+        try {
+            let atachementName;
+            if (atachement?.size > 0) {
+                atachementName = generateId(15);
+                try {
+                writeFileSync(`static/uploads/${atachementName}`,
+                                Buffer.from(await atachement.arrayBuffer()));
+                } catch (error) {
+                    console.log(error);
+                    return fail(500, { message: 'Failed to upload file' });
+                }
+            }
+            const productId = generateId(15);
+            const versionId = generateId(15);
+            const newProduct = await prisma.product.create({
+                data: {
+                    id: productId,
+                    name: productName,
+                    versions: {
+                        create: [
+                            {
+                                id : versionId,
+                                note,
+                                state,
+                                version: 1,
+                                startDate: startDate,
+                                deadline: deadline,
+                                atachement: atachementName,
+                            },
+                        ],
+                    },
+                    client: {
+                        connect: {
+                            id: clientId,
+                        },
+                    },
+                }
+            });
+            return {
+                status: 201,
+                body: newProduct
+            };
+        }
+        catch (error) {
+            console.log(error);
+            return fail(500, { message: 'Failed to create product' });
+        }
+    },
 };

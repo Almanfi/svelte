@@ -20,7 +20,8 @@
         {name: "Home", href: "/"},
         {name: "article", href: "/article"},
         {name: "clients", href: "/client"},
-        {name: "products", href: "/product"}
+        {name: "products", href: "/product"},
+        {name: "sales", href: "/sales"}
     ];
 </script>
 

@@ -10,10 +10,10 @@
     let product = data.product;
 </script>
 
-<p>{JSON.stringify(product)}</p>
-
-<VersionAdder {product} />
-<div class="flex min-h-full justify-center px-6 py-12 lg:px-8">
+<div class="flex min-h-full justify-center px-6 pt-12 lg:px-8">
+    <VersionAdder {product} />
+</div>
+<div class="flex min-h-full justify-center px-6 py-6 lg:px-8">
     <ProductView {product}/>
 </div>
 

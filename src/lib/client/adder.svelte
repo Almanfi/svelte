@@ -7,17 +7,6 @@
     import { clients } from "$lib/store";
     import { toast } from "svelte-sonner";
  
-    // function toasting() {
-    //   toast("Event has been created", {
-    //     description: "Sunday, December 03, 2023 at 9:00 AM",
-    //     action: {
-    //       label: "Undo",
-    //       onClick: () => console.log("Undo")
-    //     }
-    //   })
-    // }
-
-    
     let name = '';
     let email = '';
 

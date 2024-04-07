@@ -9,7 +9,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (!sessionId) {
 		console.log("in no session id")
 		console.log(event.url.pathname)
-		if (event.url.pathname !== "/login" && event.url.pathname !== "/signup") redirect(302, "/login");
+		if (event.url.pathname !== "/login"
+			&& event.url.pathname !== "/createAdmin")
+			redirect(302, "/login");
 		event.locals.user = null;
 		event.locals.session = null;
 		return resolve(event);

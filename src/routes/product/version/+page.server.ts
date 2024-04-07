@@ -36,7 +36,7 @@ export const actions: Actions = {
         if (!note) note = 'new version just created';
         try {
             let atachementName;
-            if (atachement.size > 0) {
+            if (atachement?.size > 0) {
                 atachementName = generateId(15);
                 try {
                 writeFileSync(`static/uploads/${atachementName}`,
