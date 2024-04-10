@@ -21,7 +21,8 @@
         {name: "article", href: "/article"},
         {name: "clients", href: "/client"},
         {name: "products", href: "/product"},
-        {name: "sales", href: "/sales"}
+        {name: "sales", href: "/sales"},
+        {name: "production", href: "/production"},
     ];
 </script>
 

@@ -22,6 +22,7 @@
     import { cn } from "$lib/utils";
     import { Input } from "$lib/components/ui/input";
     import DataTableCheckbox from "$lib/data-table/data-table-checkbox.svelte";
+	import { page } from "$app/stores";
    
     type Payment = {
       id: string;
@@ -31,6 +32,78 @@
     };
    
     const data: Payment[] = [
+      {
+        id: "m5gr84i9",
+        amount: 316,
+        status: "Success",
+        email: "ken99@yahoo.com"
+      },
+      {
+        id: "3u1reuv4",
+        amount: 242,
+        status: "Success",
+        email: "Abe45@gmail.com"
+      },
+      {
+        id: "derv1ws0",
+        amount: 837,
+        status: "Processing",
+        email: "Monserrat44@gmail.com"
+      },
+      {
+        id: "5kma53ae",
+        amount: 874,
+        status: "Success",
+        email: "Silas22@gmail.com"
+      },
+      {
+        id: "m5gr84i9",
+        amount: 316,
+        status: "Success",
+        email: "ken99@yahoo.com"
+      },
+      {
+        id: "3u1reuv4",
+        amount: 242,
+        status: "Success",
+        email: "Abe45@gmail.com"
+      },
+      {
+        id: "derv1ws0",
+        amount: 837,
+        status: "Processing",
+        email: "Monserrat44@gmail.com"
+      },
+      {
+        id: "5kma53ae",
+        amount: 874,
+        status: "Success",
+        email: "Silas22@gmail.com"
+      },
+      {
+        id: "m5gr84i9",
+        amount: 316,
+        status: "Success",
+        email: "ken99@yahoo.com"
+      },
+      {
+        id: "3u1reuv4",
+        amount: 242,
+        status: "Success",
+        email: "Abe45@gmail.com"
+      },
+      {
+        id: "derv1ws0",
+        amount: 837,
+        status: "Processing",
+        email: "Monserrat44@gmail.com"
+      },
+      {
+        id: "5kma53ae",
+        amount: 874,
+        status: "Success",
+        email: "Silas22@gmail.com"
+      },
       {
         id: "m5gr84i9",
         amount: 316,
@@ -171,6 +244,7 @@
    
     const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
     const { filterValue } = pluginStates.filter;
+    $: $pageIndex, console.log("changed");
    
     const { selectedDataIds } = pluginStates.select;
    

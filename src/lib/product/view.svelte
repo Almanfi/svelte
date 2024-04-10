@@ -29,16 +29,8 @@
     $: selectedState = {value: versionToDisplay.state}
     let selectedStateValue : string | undefined = "";
 
-    function formattedDate(date: string) {
-      if (!date) return 'not set';
-      return new Date(date).toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-    }
-
     //date picker
+    import { formattedDate } from "$lib/utils";
     import DatePicker from "$lib/data-table/date-picker.svelte";
     let startDate : string | undefined = undefined;
     let deadline : string | undefined = undefined;

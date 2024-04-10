@@ -60,3 +60,12 @@ export const flyAndScale = (
         easing: cubicOut
     };
 };
+
+export function formattedDate(date: string) {
+    if (!date) return 'not set';
+    return new Date(date).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  }

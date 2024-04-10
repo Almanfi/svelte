@@ -92,7 +92,8 @@ export const actions: Actions = {
                 console.log("-------- done deleting old file ------------");
             }
             return {
-                status: 200
+                status: 200,
+                body: version,
             };
         }
         catch (err) {
