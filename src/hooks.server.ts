@@ -4,11 +4,13 @@ import type { Handle } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
+	if (process.env.VAPID_PUBLIC_KEY)
+		console.log("+vapid public key", process.env.VAPID_PUBLIC_KEY);
+	else
+		console.log("-vapid public key not set");
 
 	const sessionId = event.cookies.get(lucia.sessionCookieName);
 	if (!sessionId) {
-		console.log("in no session id")
-		console.log(event.url.pathname)
 		if (event.url.pathname !== "/login"
 			&& event.url.pathname !== "/signup"
 			&& event.url.pathname !== "/createAdmin")
@@ -17,11 +19,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 		event.locals.session = null;
 		return resolve(event);
 	}
-	console.log("in session id")
-	console.log(sessionId);
 	
 	const { session, user } = await lucia.validateSession(sessionId);
-	console.log("done validating session")
 	if (session && session.fresh) {
 		const sessionCookie = lucia.createSessionCookie(session.id);
 		// sveltekit types deviates from the de-facto standard
@@ -32,7 +31,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		});
 	}
 	if (!session) {
-		console.log("in no session")
 		console.log(event.url.pathname)
 		if (event.url.pathname !== "/login"  && event.url.pathname !== "/signup") redirect(302, "/login");
 		const sessionCookie = lucia.createBlankSessionCookie();
@@ -43,6 +41,5 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 	event.locals.user = user;
 	event.locals.session = session;
-	console.log("done setting locals")
 	return resolve(event);
 };

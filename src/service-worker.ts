@@ -81,7 +81,7 @@ self.addEventListener('push', function (event: any) {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const registration = (self as any).registration as ServiceWorkerRegistration;
 	event.waitUntil(
-		registration.showNotification('SvelteKit Music Store', {
+		registration.showNotification('SvelteKit notification', {
 			body: payload
 		})
 	);
