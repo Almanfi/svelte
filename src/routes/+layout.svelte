@@ -7,26 +7,6 @@
     ];
     export let data = {};
 
-    function randomNotification() {
-        const notifTitle = "notification 2";
-        const notifBody = `Created by notif creator}.`;
-        const notifImg = `pwa-64x64.png`;
-        const options = {
-            body: notifBody,
-            icon: notifImg,
-        };
-        new Notification(notifTitle, options);
-        setTimeout(randomNotification, 10000);
-}
-
-
-    function allowNotifications() {
-        Notification.requestPermission().then((result) => {
-        if (result === "granted") {
-        randomNotification();
-        }
-      });
-    };
     import { ModeWatcher } from "mode-watcher";
     import { DashboardHeader } from '$lib/dashboard';
     import { Toaster } from "$lib/components/ui/sonner";

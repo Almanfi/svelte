@@ -4,6 +4,7 @@ import { Prisma } from '$lib/server/prisma';
 import { redirect } from '@sveltejs/kit';
 import { lucia } from '$lib/server/lucia';
 import { generateId } from 'lucia';
+import { sendNotificationToAllUsers } from '$lib/server/subscription';
 
 export const load: PageServerLoad = async (event) => {
     if (!event.locals.user) redirect(302, "/login");
@@ -39,6 +40,7 @@ export const actions: Actions = {
                     email,
                 }
             });
+            sendNotificationToAllUsers("new user added");
             return {
                 status: 201,
                 body: client
