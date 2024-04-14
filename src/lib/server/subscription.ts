@@ -82,12 +82,12 @@ export async function sendNotificationToUser(userId: string, payload: string) {
 export async function sendNotificationToAllUsers(payload: string) {
     const users = await prisma.authUser.findMany();
 
-    for (const user of users) {
-        if (!user.userSubs) {
-            continue;
-        }
+    const notificationPromises = users
+    .filter(user => user.userSubs)
+    .map(user => {
+        const subscription = JSON.parse(user.userSubs as string);
+        return sendNotification(subscription, payload);
+    });
 
-        const subscription = JSON.parse(user.userSubs);
-        await sendNotification(subscription, payload);
-    }
+    await Promise.all(notificationPromises);
 }
