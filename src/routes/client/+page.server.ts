@@ -40,7 +40,7 @@ export const actions: Actions = {
                     email,
                 }
             });
-            sendNotificationToAllUsers("new user added");
+            sendNotificationToAllUsers(`new user added: ${client.name}`);
             return {
                 status: 201,
                 body: client
