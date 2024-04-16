@@ -18,7 +18,7 @@
     let selectedGroups: string = "";
 
     $: {
-      selectedGroups = groupsCpy?.filter(group => group.slected).map(group => group.id).join(",");
+      selectedGroups = groupsCpy?.filter(group => group.slected).map(group => group.name).join(",");
       console.log("selected groups: " + selectedGroups);
     }
 
@@ -62,6 +62,11 @@
         }
       });
       openUser = users.find(user => user.id === id);
+      for (let group of groupsCpy) {
+        if (openUser.userGroup.find(userGroup => userGroup.id === group.id)) {
+          group.slected = true;
+        }
+      }
       viewedUser = {
         id: openUser.id,
         name: openUser.name,
@@ -127,21 +132,22 @@
       document.getElementById('drawerClosser')?.click();
   
       return async ({ result, update }) => {
+        console.log(result);
         if (result.type === "success" && result.data) {
           console.log("submitted data with success");
           let newData = result.data.body;
           console.log("returned data: " + JSON.stringify(newData));
-          console.log("--------------- version is : " + newData.version);
-          users = users.map(user => 
-            user.id === viewedUser.productId 
-              ? { ...user, versions: user.versions.map((version) => version.version === newData.version ? newData : version) }
-              :user 
-          );
+          // console.log("--------------- version is : " + newData.version);
+          // users = users.map(user => 
+          //   user.id === viewedUser.productId 
+          //     ? { ...user, versions: user.versions.map((version) => version.version === newData.version ? newData : version) }
+          //     :user 
+          // );
         update();
         }
         else {
             toast("user update failed", {
-            description: result.data.message,
+            // description: result.data.message,
           })
           console.log("error: " + JSON.stringify(result));
         }
@@ -149,7 +155,7 @@
     }}>
 
         <div class="grid w-full items-center">
-          <input id="id" name="id" hidden type="text" value={viewedUser.id} />
+          <input id="UserId" name="UserId" hidden type="text" value={viewedUser.id} />
 
           <input id="groups" name="groups" hidden type="text" bind:value={selectedGroups} />
           <Collapsible.Root class="w-[350px] space-y-2 m-auto">

@@ -23,6 +23,7 @@
         {name: "products", href: "/product"},
         {name: "sales", href: "/sales"},
         {name: "production", href: "/production"},
+        {name: "admin", href: "/admin"},
     ];
 </script>
 
