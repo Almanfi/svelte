@@ -81,38 +81,149 @@
     import CaretSort from "svelte-radix/CaretSort.svelte";
     import * as Collapsible from "$lib/components/ui/collapsible";
     import * as ToggleGroup from "$lib/components/ui/toggle-group";
+
+    import * as Tabs from '$lib/components/ui/tabs/index.js';
     
 </script>
 
-<h1 class="mx-auto text-center my-4">Available users</h1>
 
-<div class="rounded-md border max-w-[90%] m-auto">
-  <Table.Root >
-    <Table.Header>
-      <Table.Row>
-        <Table.Head class="">name</Table.Head>
-        <Table.Head class="text-center">email</Table.Head>
-        <Table.Head class="text-center">group</Table.Head>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
-      {#each users as user (user.id)}
-      <Table.Row on:click={() => openDrawer(user.id)}>
-        <Table.Cell class="whitespace-nowrap">{user.username}</Table.Cell>
-        <Table.Cell class="text-center">{user.email ? user.email : "none"}</Table.Cell>
-        <Table.Cell class="text-center">
-            {#each user.userGroup as group, idx}
-                {group.name}
-                {#if idx < user.userGroup.length - 1}
-                    {", "}
-                {/if}
+<div class="flex-col md:flex">
+	<div class="flex-1 space-y-4 p-8 pt-6">
+
+    <Tabs.Root value="teamSelect" class="space-y-4">
+      <div class="w-full flex items-center justify-center md:justify-normal max-w-[90%] m-auto">
+        <Tabs.List class="w-fit">
+          <Tabs.Trigger class="px-1 sm:px-3" value="teamSelect">select user team</Tabs.Trigger>
+          <Tabs.Trigger class="px-1 sm:px-3" value="adminSelect">select admins</Tabs.Trigger>
+        </Tabs.List>
+      </div>
+
+      <Tabs.Content value="teamSelect" class="space-y-4">
+        <div class="rounded-md border max-w-[90%] m-auto">
+          <Table.Root >
+            <Table.Header>
+              <Table.Row>
+                <Table.Head class="">name</Table.Head>
+                <Table.Head class="text-center hidden sm:table-cell">email</Table.Head>
+                <Table.Head class="text-center min-w-[140px]">group</Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {#each users as user (user.id)}
+              <Table.Row on:click={() => openDrawer(user.id)} class="{user.userGroup.filter(g => g.name === 'admin').length !== 0 ? 'bg-red-800 bg-opacity-10' : ''}">
+                <Table.Cell class="whitespace-nowrap">{user.username}</Table.Cell>
+                <Table.Cell class="text-center hidden sm:table-cell">{user.email ? user.email : "none"}</Table.Cell>
+                <Table.Cell class="text-center h-14">
+                    {#each user.userGroup as group, idx}
+                        {group.name}
+                        {#if idx < user.userGroup.length - 1}
+                            {", "}
+                        {/if}
+                    {/each}
+                </Table.Cell>
+              </Table.Row>
             {/each}
-        </Table.Cell>
-      </Table.Row>
-    {/each}
-    </Table.Body>
-  </Table.Root>
+            </Table.Body>
+          </Table.Root>
+        </div>
+      </Tabs.Content>
+
+      <Tabs.Content value="adminSelect" class="space-y-4">
+        <div class="rounded-md border max-w-[90%] m-auto">
+          <Table.Root >
+            <Table.Header>
+              <Table.Row>
+                <Table.Head class="">name</Table.Head>
+                <Table.Head class="text-center">email</Table.Head>
+                <Table.Head class="text-center min-w-[140px]">admin status</Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {#each users as user (user.id)}
+              <Table.Row>
+                <Table.Cell class="whitespace-nowrap">{user.username}</Table.Cell>
+                <Table.Cell class="text-center">{user.email ? user.email : "none"}</Table.Cell>
+                <Table.Cell class="text-center h-14">
+                  {#if user.userGroup.filter(g => g.name === 'admin').length !== 0}
+                    <form action="?/demoteFromAdmin" method="post"
+                    use:enhance={({ formData, cancel}) => {
+                      console.log("-----------------------------");
+                      const plainFormData = Object.fromEntries(formData.entries());
+                      console.log("submitted data in the making: " + JSON.stringify(plainFormData));
+                      document.getElementById('drawerClosser')?.click();
+                  
+                      return async ({ result, update }) => {
+                        console.log(result);
+                        if (result.type === "success" && result.data) {
+                          let newData = result.data.body;
+                          users = users.map(user => 
+                            user.id === newData.id 
+                              ? { ...user, userGroup: newData.userGroup }
+                              :user 
+                          );
+                        update();
+                        }
+                        else {
+                            toast("user update failed", {
+                            description: result.data.message,
+                          })
+                          console.log("error: " + JSON.stringify(result));
+                        }
+                      };
+                    }}
+                    >
+                      <input type="hidden" name="userId" value={user.id}>
+                      <Button variant="outline" type="submit" class="text-red-800" size="sm">
+                        demote
+                      </Button>
+                    </form>
+                  {:else}
+                    <form action="?/promoteToAdmin" method="post"
+                    use:enhance={({ formData, cancel}) => {
+                      console.log("-----------------------------");
+                      const plainFormData = Object.fromEntries(formData.entries());
+                      console.log("submitted data in the making: " + JSON.stringify(plainFormData));
+                      document.getElementById('drawerClosser')?.click();
+                  
+                      return async ({ result, update }) => {
+                        console.log(result);
+                        if (result.type === "success" && result.data) {
+                          let newData = result.data.body;
+                          users = users.map(user => 
+                            user.id === newData.id 
+                              ? { ...user, userGroup: newData.userGroup }
+                              :user 
+                          );
+                        update();
+                        }
+                        else {
+                            toast("user update failed", {
+                            description: result.data.message,
+                          })
+                          console.log("error: " + JSON.stringify(result));
+                        }
+                      };
+                    }}
+                    >
+                      <input type="hidden" name="userId" value={user.id}>
+                      <Button variant="outline" type="submit" class="text-green-800" size="sm">
+                        promote
+                      </Button>
+                    </form>
+                  {/if}
+                </Table.Cell>
+              </Table.Row>
+            {/each}
+            </Table.Body>
+          </Table.Root>
+        </div>
+      </Tabs.Content>
+    </Tabs.Root>
+
 </div>
+</div>
+
+
 
 <Drawer.Root>
   <Drawer.Trigger id="drawerOpener" class="hidden">Open</Drawer.Trigger>
@@ -120,7 +231,7 @@
     <div class="flex justify-center items-center max-w-md m-auto">
     <Drawer.Header>
         <Drawer.Title>{viewedUser.name}</Drawer.Title>
-      <!-- <Drawer.Description>click user name to visit it's page</Drawer.Description> -->
+      <Drawer.Description>email: {viewedUser.email ? viewedUser.email : "none"}</Drawer.Description>
     </Drawer.Header>
     </div>
 
@@ -134,20 +245,17 @@
       return async ({ result, update }) => {
         console.log(result);
         if (result.type === "success" && result.data) {
-          console.log("submitted data with success");
           let newData = result.data.body;
-          console.log("returned data: " + JSON.stringify(newData));
-          // console.log("--------------- version is : " + newData.version);
-          // users = users.map(user => 
-          //   user.id === viewedUser.productId 
-          //     ? { ...user, versions: user.versions.map((version) => version.version === newData.version ? newData : version) }
-          //     :user 
-          // );
-        update();
+          users = users.map(user => 
+            user.id === newData.id 
+              ? { ...user, userGroup: newData.userGroup }
+              :user
+          );
+          update();
         }
         else {
             toast("user update failed", {
-            // description: result.data.message,
+            description: result.data.message,
           })
           console.log("error: " + JSON.stringify(result));
         }

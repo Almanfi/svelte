@@ -5,6 +5,8 @@
     import * as Command from "$lib/components/ui/command";
     import * as Popover from "$lib/components/ui/popover";
     import { tick } from "svelte";
+    import { Archive } from 'lucide-svelte';
+    import { SquareUser } from 'lucide-svelte';
 
     export { className as class };
     
@@ -31,7 +33,6 @@
     let inputValue = '';
 
     async function fetchClients(query: string) {
-        fetchingClients = true;
         console.log("fetching clients: " + query);
         return await fetch(`/api/client?q=${query}&c=5`)
         .then(response => response.json())
@@ -41,12 +42,10 @@
             foundClients = value
             console.log("found client was updated");
           }
-        //   fetchingClients = false;
         })
         .catch(error => {console.error('Error:', error); fetchingClients = false;});
     }
     async function fetchProducts(query: string) {
-        fetchingClients = true;
         console.log("fetching clients: " + query);
         return await fetch(`/api/product?q=${query}&c=5`)
         .then(response => response.json())
@@ -56,12 +55,12 @@
             foundProducts = value
             console.log("found product was updated");
           }
-        //   fetchingClients = false;
         })
         .catch(error => {console.error('Error:', error); fetchingClients = false;});
     }
 
     async function fetchClientsAndProducts(query: string) {
+        fetchingClients = true;
         fetchClients(inputValue);
         fetchProducts(inputValue);
         fetchingClients = false;
@@ -94,39 +93,46 @@
         <Command.Empty>No client found.</Command.Empty>
         <Command.Group>
           {#each foundProducts as foundProduct}
+          <a href="/product/{foundProduct.id}">
             <Command.Item
-              value={foundProduct.id + " " + foundProduct.name + " " + foundProduct.client.name}
-              onSelect={(currentValue) => {
+            value={foundProduct.id + " " + foundProduct.name + " " + foundProduct.client.name}
+            >
+            <!-- onSelect={(currentValue) => {
                 value = currentValue;
                 closeAndFocusTrigger(ids.trigger);
-              }}
-            >
-              <div class="flex flex-col items-start justify-center w-full">
-                <div class="text-xs text-gray-500">{foundProduct.name}</div>
+              }} -->
+            <div class="flex flex-col items-start justify-center w-full">
+              
+                <div class="text-xs text-gray-500">
+                  <Archive class="inline mx-2"/>
+                  {foundProduct.name}
+                </div>
                 <div class="flex flex-wrap justify-end w-full">
-                    <div class="text-xs text-gray-500">{foundProduct.client.name}</div>
+                  <div class="text-xs text-gray-500">{foundProduct.client.name}</div>
                 </div>
               </div>
             </Command.Item>
+          </a>
           {/each}
         </Command.Group>
         <Command.Separator/>
         <Command.Group>
           {#each foundClients as foundClient}
+          <a href="/client/{foundClient.id}">
             <Command.Item
               value={foundClient.id + " " + foundClient.name + " " + foundClient.email}
-              onSelect={(currentValue) => {
-                value = currentValue;
-                closeAndFocusTrigger(ids.trigger);
-              }}
             >
               <div class="flex flex-col items-start justify-center w-full">
-                <div class="text-xs text-gray-500">{foundClient.name}</div>
+                <div class="text-xs text-gray-500">
+                  <SquareUser class="inline mx-2"/>
+                  {foundClient.name}
+                </div>
                 <div class="flex flex-wrap justify-end w-full">
-                    <div class="text-xs text-gray-500">{foundClient.email}</div>
+                  <div class="text-xs text-gray-500">{foundClient.email}</div>
                 </div>
               </div>
             </Command.Item>
+          </a>
           {/each}
         </Command.Group>
         {/if}

@@ -8,11 +8,11 @@ export const load: PageServerLoad = async (event) => {
     if (!event.locals.user) redirect(302, "/login");
     let groups = await Prisma.userGroup.findMany();
     try {
-        let ids: string[] = [];
-        for (let i = 0; i < 3; i++) {
-            ids[i] = generateId(15);
-        }
         if (groups.length < 3) {
+            let ids: string[] = [];
+            for (let i = 0; i < 3; i++) {
+                ids[i] = generateId(15);
+            }
             let newGroups = [
                 { name: "admin", id: ids[0] },
                 { name: "sale" , id: ids[1]},
@@ -29,13 +29,6 @@ export const load: PageServerLoad = async (event) => {
                     })
                 );
             let userGroupTransaction = await Prisma.$transaction(grooupCreation);
-
-            // groups = await Prisma.userGroup.createMany({
-            //     data: newGroups.map(group => ({
-            //         name: group.name,
-            //         id: group.id,
-            //       })),
-            // });
             groups = userGroupTransaction;
         }
     }
@@ -51,7 +44,7 @@ export const load: PageServerLoad = async (event) => {
                 NOT: {
                     userGroup: {
                         some: {
-                            name: "admin"
+                            name: "admindd"
                         }
                     }
                 }
@@ -71,20 +64,11 @@ export const actions: Actions = {
         };
 
         if (!event.locals.user) return fail(401, { message: 'Unauthorized' });
-        let authUser = await prisma.authUser.findUnique({
-            where: {
-                id: event.locals.user.id
-            },
-            include: {
-                userGroup: true
-            }
-        });
-        console.log(authUser);
-        if (!authUser || authUser.userGroup.filter(group => group.name === "admin").length === 0)
+        const userIsAdmin: boolean = await isAdmin(event.locals.user);
+        if (!userIsAdmin)
             return fail(401, { message: 'You do not have permission to update user group' });
-        
+
         if (!UserId) return fail(400, { message: 'User ID is required' });
-        if (!groups) return fail(400, { message: 'User group is required' });
         const user = await Prisma.authUser.findUnique({
             where: {
                 id: UserId
@@ -94,6 +78,8 @@ export const actions: Actions = {
             }
         });
         if (!user) return fail(404, { message: 'User not found' });
+        if (groups.includes("admin"))
+            return fail(400, { message: 'Cannot promote user to admin' });
         if (user.userGroup.filter(group => group.name === "admin").length > 0)
             return fail(400, { message: 'Cannot update user group for admin' });
 
@@ -104,8 +90,6 @@ export const actions: Actions = {
                 }
             }
         });
-        if (userGroup.length === 0)
-            return fail(400, { message: 'Invalid user group' });
 
         try {
             const user = await Prisma.authUser.update({
@@ -131,33 +115,35 @@ export const actions: Actions = {
             return fail(500, { message: 'Failed to update user' });
         }
     },
-    promoteToAdmin: async ( event, locals ) => {
-        const { UserId } = Object.fromEntries(await event.request.formData()) as {
+    promoteToAdmin: async ( event ) => {
+        const { userId } = Object.fromEntries(await event.request.formData()) as {
             userId: string,
         };
         
-        if (locals.user.userGroup.name !== "admin")
+        if (!event.locals.user) return fail(401, { message: 'Unauthorized' });
+        const userIsAdmin: boolean = await isAdmin(event.locals.user);
+        if (!userIsAdmin)
             return fail(401, { message: 'You do not have permission to update user group' });
 
-        if (!UserId) return fail(400, { message: 'User ID is required' });
+        if (!userId) return fail(400, { message: 'User ID is required' });
 
-        let userGroup = await Prisma.userGroup.findFirst({
+        let adminGroup = await Prisma.userGroup.findFirst({
             where: {
                 name: "admin"
             }
         });
-        if (!userGroup)
+        if (!adminGroup)
             return fail(500, { message: 'internal server error' });
 
         try {
             const user = await Prisma.authUser.update({
                 where: {
-                    id: UserId
+                    id: userId
                 },
                 data: {
                     userGroup: {
                         set : {
-                            id: userGroup.id
+                            id: adminGroup.id
                         }
                     }
                 },
@@ -165,6 +151,7 @@ export const actions: Actions = {
                     userGroup: true
                 }
             });
+            console.log(user);
             return {
                 status: 200,
                 body: user
@@ -175,18 +162,20 @@ export const actions: Actions = {
             return fail(500, { message: 'Failed to update user to admin' });
         }
     },
-    demoteFromAdmin: async ( event, locals ) => {
-        const { UserId } = Object.fromEntries(await event.request.formData()) as {
+    demoteFromAdmin: async ( event ) => {
+        const { userId } = Object.fromEntries(await event.request.formData()) as {
             userId: string,
         };
-        
-        if (locals.user.userGroup.name !== "admin")
+
+        if (!event.locals.user) return fail(401, { message: 'Unauthorized' });
+        const userIsAdmin: boolean = await isAdmin(event.locals.user);
+        if (!userIsAdmin)
             return fail(401, { message: 'You do not have permission to update user group' });
 
-        if (locals.user.id === UserId)
+        if (event.locals.user.id === userId)
             return fail(400, { message: 'Cannot demote yourself' });
 
-        if (!UserId) return fail(400, { message: 'User ID is required' });
+        if (!userId) return fail(400, { message: 'User ID is required' });
 
         let userGroup = await Prisma.userGroup.findFirst({
             where: {
@@ -199,7 +188,7 @@ export const actions: Actions = {
         try {
             const user = await Prisma.authUser.update({
                 where: {
-                    id: UserId
+                    id: userId
                 },
                 data: {
                     userGroup: {
@@ -223,3 +212,17 @@ export const actions: Actions = {
         }
     },
 };
+
+async function isAdmin(user) : Promise<boolean> {
+    let authUser = await prisma.authUser.findUnique({
+        where: {
+            id: user.id
+        },
+        include: {
+            userGroup: true
+        }
+    });
+    if (!authUser || authUser.userGroup.filter(group => group.name === "admin").length === 0)
+        return false;
+    return true;
+}
