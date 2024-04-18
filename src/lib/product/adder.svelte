@@ -9,29 +9,89 @@
 		name: string;
 		id: string;
 	};
+
+	// date picker
+	import DatePicker from '$lib/data-table/date-picker.svelte';
+	let startDate: string | undefined = undefined;
+	let deadline: string | undefined = undefined;
+
+	import { formattedDate } from '$lib/utils';
+	import { toast } from 'svelte-sonner';
+	$: {
+		if (deadline && startDate && startDate > deadline) {
+			deadline = undefined;
+			toast('product infomation incorrect', {
+				description: 'the deadline must be after the start date'
+			});
+		}
+	}
 </script>
 
 <Dialog.Root>
 	<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>add pruduct</Dialog.Trigger>
-	<Dialog.Content class="sm:max-w-[425px]">
-		<form action="/product?/createProduct" method="post" use:enhance>
-			<Dialog.Header>
-				<Dialog.Title>add product</Dialog.Title>
-				<Dialog.Description>add new product here. Click save when you're done.</Dialog.Description>
+	<Dialog.Content class="max-w-[425px] w-[90%]">
+		<form
+			action="/product?/createFreshProduct"
+			method="post"
+			enctype="multipart/form-data"
+			use:enhance={({ formData, cancel }) => {
+				console.log('-----------------------------');
+				const plainFormData = Object.fromEntries(formData.entries());
+				console.log('submitted data in the making: ' + JSON.stringify(plainFormData));
+
+				return async ({ result, update }) => {
+					if (result.type === 'success' && result.data) {
+						let newClient = result.data.body;
+						update();
+						document.getElementById('prodDialogCloser')?.click();
+					} else {
+						toast('client creation failed', {
+							description: result.data.message
+						});
+						console.log('error: ' + JSON.stringify(result));
+					}
+				};
+			}}
+		>
+			<Dialog.Header class="mb-6">
+				<Dialog.Title>Add new product</Dialog.Title>
 			</Dialog.Header>
-			<div class="grid gap-4 py-4">
-				<div class="grid grid-cols-4 items-center gap-4">
-					<Label for="name" class="text-right">Name</Label>
-					<Input name="name" id="name" class="col-span-3" />
+			<div class="grid w-full items-center gap-4">
+				<input hidden bind:value={client.id} type="text" name="clientId" id="clientId" />
+
+				<div class="flex flex-col space-y-1.5">
+					<Label for="productName">product Name</Label>
+					<Input name="productName" id="productName" type="text" placeholder="product name" />
 				</div>
-				{#if client}
-					<input type="hidden" name="clientId" bind:value={client.id} />
-				{/if}
+
+				<div class="flex flex-col space-y-1.5">
+					<Label for="startDate">start Date</Label>
+					<DatePicker bind:date={startDate} />
+					<input id="startDate" name="startDate" hidden type="text" bind:value={startDate} />
+				</div>
+
+				<div class="flex flex-col space-y-1.5">
+					<Label for="deadline">deadline</Label>
+					<DatePicker bind:date={deadline} />
+					<input id="deadline" name="deadline" hidden type="text" bind:value={deadline} />
+				</div>
+
+				<div class="flex flex-col space-y-1.5">
+					<Label for="atachement">atachement</Label>
+					<Input
+						name="atachement"
+						id="atachement"
+						type="file"
+						placeholder={'versionToDisplay.atachement'}
+					/>
+				</div>
 			</div>
-			<Dialog.Footer>
+
+			<Dialog.Footer class="my-4 flex flex-row justify-between">
 				<Dialog.Close>
-					<Button type="submit">add product</Button>
+					<Button id="prodDialogCloser" type="button" variant="outline">Cancel</Button>
 				</Dialog.Close>
+				<Button type="submit">Save changes</Button>
 			</Dialog.Footer>
 		</form>
 	</Dialog.Content>

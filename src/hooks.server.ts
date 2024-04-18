@@ -4,11 +4,6 @@ import type { Handle } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
-	if (process.env.VAPID_PUBLIC_KEY)
-		console.log("+vapid public key", process.env.VAPID_PUBLIC_KEY);
-	else
-		console.log("-vapid public key not set");
-
 	const sessionId = event.cookies.get(lucia.sessionCookieName);
 	if (!sessionId) {
 		if (event.url.pathname !== "/login"

@@ -11,11 +11,13 @@
 </script>
 
 
-<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 max-w-screen-sm">
- <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-
-<ClientAdder />
-<ClientTable />
-
+<div class="max-w-[90%] m-auto space-y-4 py-4">
+<div class="flex flex-col items-center justify-center mt-4">
+	<h1 class="text-4xl font-bold">Clients</h1>
+	<div class="mt-4 w-full space-y-3">
+		<!-- <div class="flex justify-end w-full"> -->
+  <ClientAdder />
+  <ClientTable />
+ </div>
 </div>
 </div>

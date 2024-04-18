@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { PageData } from './$types'; 
+    import type { PageData } from './$types';
     import { Button, buttonVariants } from "$lib/components/ui/button";
     import CaretSort from "svelte-radix/CaretSort.svelte";
     import * as Command from "$lib/components/ui/command";
@@ -96,11 +96,11 @@
           <a href="/product/{foundProduct.id}">
             <Command.Item
             value={foundProduct.id + " " + foundProduct.name + " " + foundProduct.client.name}
-            >
-            <!-- onSelect={(currentValue) => {
+            onSelect={(currentValue) => {
                 value = currentValue;
                 closeAndFocusTrigger(ids.trigger);
-              }} -->
+              }}
+            >
             <div class="flex flex-col items-start justify-center w-full">
               
                 <div class="text-xs text-gray-500">
@@ -121,7 +121,11 @@
           <a href="/client/{foundClient.id}">
             <Command.Item
               value={foundClient.id + " " + foundClient.name + " " + foundClient.email}
-            >
+              onSelect={(currentValue) => {
+                value = currentValue;
+                closeAndFocusTrigger(ids.trigger);
+              }}
+              >
               <div class="flex flex-col items-start justify-center w-full">
                 <div class="text-xs text-gray-500">
                   <SquareUser class="inline mx-2"/>

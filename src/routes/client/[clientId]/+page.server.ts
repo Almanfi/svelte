@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ params }) => {
             include: {
                 products: {
                     include: {
-                        versions: true
+                        versions: true,
                     }
                 }
             }

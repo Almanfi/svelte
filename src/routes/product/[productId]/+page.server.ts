@@ -3,6 +3,7 @@ import { Prisma } from '$lib/server/prisma';
 import { error, type Actions } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {
+    console.log("fetching product..." + params.productId);
     const getProduct = async () => {
         const product = await Prisma.product.findUnique({
             where: {

@@ -8,7 +8,8 @@ export const load: PageServerLoad = async (event) => {
         username : event.locals.user.username,
         products : await Prisma.product.findMany({
             include: {
-                versions: true
+                versions: true,
+                client: true,
             },
     })
     }

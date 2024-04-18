@@ -6,7 +6,6 @@ export const GET: RequestHandler = async ({url}) => {
 	const count = Number(url.searchParams.get('c') ?? '10');
 	const page = Number(url.searchParams.get('p') ?? '1');
 	const query = url.searchParams.get('q')
-    console.log('GET /api/client', { filter, count, page, query });
     try {
         const data = await prisma.client.findMany({
             take: count,

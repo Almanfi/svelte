@@ -7,7 +7,7 @@
     import VersionAdder from '$lib/product/versionAdder.svelte';
     export let data: PageData;
 
-    let product = data.product;
+    $: product = data.product;
 </script>
 
 <div class="flex min-h-full justify-center px-6 pt-12 lg:px-8">
@@ -17,8 +17,9 @@
     <ProductView {product}/>
 </div>
 
-<!-- <BreadCrumb {product} />
-
+<!-- 
+    <BreadCrumb {product} />
+    
 <ProductAdder {product} /> -->
 
 <!-- <ProductTable {products} /> -->
