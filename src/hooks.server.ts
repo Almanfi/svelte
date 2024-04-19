@@ -2,6 +2,7 @@
 import { lucia } from "$lib/server/lucia";
 import type { Handle } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
+import { Prisma as prisma } from '$lib/server/prisma';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const sessionId = event.cookies.get(lucia.sessionCookieName);
@@ -35,6 +36,29 @@ export const handle: Handle = async ({ event, resolve }) => {
 		});
 	}
 	event.locals.user = user;
+	if (user) {
+		let userInDb = await prisma.authUser.findUnique({
+			where: {
+				id: user.id
+			},
+			select: {
+				id: true,
+				username: true,
+				userGroup: {
+					select: {
+						name: true
+					}
+				}
+			}
+		});
+		let userData = null;
+		if (userInDb)
+			event.locals.user = {
+				id: userInDb.id,
+				username: userInDb.username,
+				group: userInDb.userGroup.map((group) => group.name),
+			};
+	}
 	event.locals.session = session;
 	return resolve(event);
 };

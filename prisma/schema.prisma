@@ -32,6 +32,7 @@ model Client {
 model Product {
   id        String    @id @unique
   name      String
+  description String?
   clientId  String
   createdAt DateTime  @default(now())
   client    Client    @relation(fields: [clientId], references: [id])

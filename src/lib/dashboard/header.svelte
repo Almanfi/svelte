@@ -16,15 +16,47 @@
 
     let open = false;
 
-    const navIteams = [
+    let navIteams = [
         {name: "Home", href: "/"},
-        {name: "article", href: "/article"},
-        {name: "clients", href: "/client"},
         {name: "products", href: "/product"},
-        {name: "sales", href: "/sales"},
-        {name: "production", href: "/production"},
-        {name: "admin", href: "/admin"},
     ];
+    
+    console.log("user data: ", data.user);
+    if (data.user?.group.includes("admin")) {
+        navIteams = [
+            {name: "Home", href: "/"},
+            {name: "clients", href: "/client"},
+            {name: "products", href: "/product"},
+            {name: "sales", href: "/sales"},
+            {name: "production", href: "/production"},
+            {name: "admin", href: "/admin"}
+        ];
+    }
+    else if (data.user?.group.includes("sale")
+            && data.user?.group.includes("production")) {
+                navIteams = [
+            {name: "Home", href: "/"},
+            {name: "clients", href: "/client"},
+            {name: "products", href: "/product"},
+            {name: "sales", href: "/sales"},
+            {name: "production", href: "/production"},
+        ];
+    }
+    else if (data.user?.group.includes("sale")) {
+        navIteams = [
+            {name: "Home", href: "/"},
+            {name: "clients", href: "/client"},
+            {name: "products", href: "/product"},
+            {name: "sales", href: "/sales"},
+        ];
+    }
+    else if (data.user?.group.includes("production")) {
+        navIteams = [
+            {name: "Home", href: "/"},
+            {name: "products", href: "/product"},
+            {name: "production", href: "/production"},
+        ];
+    }
 </script>
 
 <header
@@ -32,7 +64,7 @@
 >
 <div class="container flex h-14 max-w-screen-2xl items-center">
         {#if data.user}
-        <div class="mr-4 hidden md:flex">
+        <div class="mr-4 hidden lg:flex">
             <a href="/" class="mr-6 flex items-center space-x-2">
                 <Icons.logo class="h-6 w-6" />
                 <span class="hidden font-bold sm:inline-block">
@@ -51,7 +83,7 @@
                 <Button
                     builders={[builder]}
                     variant="ghost"
-                    class="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+                    class="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 lg:hidden"
                 >
                     <Icons.Hamburger class="h-5 w-5" />
                     <span class="sr-only">Toggle Menu</span>
