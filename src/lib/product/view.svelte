@@ -51,8 +51,7 @@
    
   <Card.Root class="w-[350px]">
     <Card.Header>
-      <Card.Title>Create project</Card.Title>
-      <Card.Description>Deploy your new project in one-click.</Card.Description>
+      <Card.Title>product info</Card.Title>
     </Card.Header>
 
     <form action="/product/version/{versionToDisplay.id}?/updateVersion" method="post" enctype="multipart/form-data"

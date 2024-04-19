@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as Table from "$lib/components/ui/table/index.js";
     import { formattedDate } from "$lib/utils";
-    import { Loader, X, Check, Sparkles } from 'lucide-svelte';
+    import { Loader, X, Check, Sparkles, FileText, Ban } from 'lucide-svelte';
     export let products: [{
         id: string;
         name: string;
@@ -28,6 +28,7 @@
         {/if}
         <Table.Head class="text-center hidden sm:table-cell">start Date</Table.Head>
         <Table.Head class="text-center hidden sm:table-cell">deadline</Table.Head>
+        <Table.Head class="text-center  sm:table-cell">file</Table.Head>
       </Table.Row>
     </Table.Header>
     <Table.Body>
@@ -60,6 +61,15 @@
         {/if}
         <Table.Cell class="text-center hidden sm:table-cell">{formattedDate(product.versions[product.versions.length - 1].startDate)}</Table.Cell>
         <Table.Cell class="text-center hidden sm:table-cell">{formattedDate(product.versions[product.versions.length - 1].deadline)}</Table.Cell>
+        <Table.Cell class="text-center  sm:table-cell">
+        {#if product.versions[product.versions.length - 1].atachement}
+          <a href="/files/{product.versions[product.versions.length - 1].atachementt}">
+            <FileText class="m-auto text-green-500"/>
+          </a>
+          {:else}
+          <Ban class="m-auto text-red-500"/>
+          {/if}
+        </Table.Cell>
       </Table.Row>
     {/each}
     </Table.Body>

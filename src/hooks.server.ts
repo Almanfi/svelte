@@ -41,14 +41,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 			where: {
 				id: user.id
 			},
-			select: {
-				id: true,
-				username: true,
-				userGroup: {
-					select: {
-						name: true
-					}
-				}
+			include: {
+				userGroup: true
 			}
 		});
 		let userData = null;

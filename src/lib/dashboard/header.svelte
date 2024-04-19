@@ -22,40 +22,42 @@
     ];
     
     console.log("user data: ", data.user);
-    if (data.user?.group.includes("admin")) {
-        navIteams = [
-            {name: "Home", href: "/"},
-            {name: "clients", href: "/client"},
-            {name: "products", href: "/product"},
-            {name: "sales", href: "/sales"},
-            {name: "production", href: "/production"},
-            {name: "admin", href: "/admin"}
+    $: {
+        if (data.user?.group.includes("admin")) {
+            navIteams = [
+                {name: "Home", href: "/"},
+                {name: "clients", href: "/client"},
+                {name: "products", href: "/product"},
+                {name: "sales", href: "/sales"},
+                {name: "production", href: "/production"},
+                {name: "admin", href: "/admin"}
         ];
-    }
-    else if (data.user?.group.includes("sale")
-            && data.user?.group.includes("production")) {
-                navIteams = [
-            {name: "Home", href: "/"},
-            {name: "clients", href: "/client"},
-            {name: "products", href: "/product"},
-            {name: "sales", href: "/sales"},
-            {name: "production", href: "/production"},
-        ];
-    }
-    else if (data.user?.group.includes("sale")) {
-        navIteams = [
-            {name: "Home", href: "/"},
-            {name: "clients", href: "/client"},
-            {name: "products", href: "/product"},
-            {name: "sales", href: "/sales"},
-        ];
-    }
-    else if (data.user?.group.includes("production")) {
-        navIteams = [
-            {name: "Home", href: "/"},
-            {name: "products", href: "/product"},
-            {name: "production", href: "/production"},
-        ];
+        }
+        else if (data.user?.group.includes("sale")
+                && data.user?.group.includes("production")) {
+            navIteams = [
+                {name: "Home", href: "/"},
+                {name: "clients", href: "/client"},
+                {name: "products", href: "/product"},
+                {name: "sales", href: "/sales"},
+                {name: "production", href: "/production"},
+            ];
+        }
+        else if (data.user?.group.includes("sale")) {
+            navIteams = [
+                {name: "Home", href: "/"},
+                {name: "clients", href: "/client"},
+                {name: "products", href: "/product"},
+                {name: "sales", href: "/sales"},
+            ];
+        }
+        else if (data.user?.group.includes("production")) {
+            navIteams = [
+                {name: "Home", href: "/"},
+                {name: "products", href: "/product"},
+                {name: "production", href: "/production"},
+            ];
+        }
     }
 </script>
 

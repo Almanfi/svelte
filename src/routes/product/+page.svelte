@@ -12,10 +12,12 @@
   </script>
   
   
-  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 max-w-screen-sm">
-   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-  
+  <!-- <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 max-w-screen-sm">
+   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm"> -->
+  <div class="max-w-[90%] m-auto space-y-4 pt-4">
   <!-- <ProductAdder /> -->
-  <ProductTable {products}/>
+  <div class="flex flex-col items-center justify-center mt-4">
+    <h1 class="text-4xl font-bold mb-8">Products</h1>
   </div>
+  <ProductTable {products}/>
   </div>
