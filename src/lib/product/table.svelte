@@ -23,7 +23,7 @@
         </Table.Head>
         <Table.Head class="text-center">version</Table.Head>
         <Table.Head class="text-center">status</Table.Head>
-        {#if products[0].client}
+        {#if products && products[0]?.client}
         <Table.Head class="text-center hidden sm:table-cell">client</Table.Head>
         {/if}
         <Table.Head class="text-center hidden sm:table-cell">start Date</Table.Head>

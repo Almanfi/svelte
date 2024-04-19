@@ -9,9 +9,9 @@ export const actions: Actions = {
   default: async (event) => {
     const oldAdmin = await prisma.authUser.findFirst({
       where: {
-        group: {
+        userGroup: {
           some: {
-            permisions: {
+            groupPermision: {
               some: {
                 name: 'admin'
               }
@@ -50,12 +50,12 @@ export const actions: Actions = {
             }
           },
 
-          group: {
+          userGroup: {
             create: {
               id: groupId,
               name: 'admin',
 
-              permisions: {
+              groupPermision: {
                 create: {
                   name: 'admin',
                 }

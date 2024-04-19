@@ -214,7 +214,7 @@ export const actions: Actions = {
 };
 
 async function isAdmin(user) : Promise<boolean> {
-    let authUser = await prisma.authUser.findUnique({
+    let authUser = await Prisma.authUser.findUnique({
         where: {
             id: user.id
         },
