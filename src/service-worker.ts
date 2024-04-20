@@ -86,7 +86,27 @@ self.addEventListener('push', function (event: any) {
 	const registration = (self as any).registration as ServiceWorkerRegistration;
 	event.waitUntil(
 		registration.showNotification('SvelteKit notification', {
-			body: payload
+			body: payload,
+            icon: 'pwa-192x192.png',
 		})
 	);
 } as EventListener);
+
+self.addEventListener('notificationclick', function(event) {
+    event.notification.close(); // Close the notification
+
+    // This looks to see if the current is already open and focuses if it is
+    event.waitUntil(
+        clients.matchAll({
+            type: 'window'
+        }).then(function(clientList) {
+            for (var i = 0; i < clientList.length; i++) {
+                var client = clientList[i];
+                if (client.url == '/' && 'focus' in client)
+                    return client.focus();
+            }
+            if (clients.openWindow)
+                return clients.openWindow('/');
+        })
+    );
+});
