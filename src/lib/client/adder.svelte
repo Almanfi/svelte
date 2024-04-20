@@ -73,9 +73,9 @@
         <!-- <form action="/client?/createClient" method="post" use:enhance> -->
         <Dialog.Header>
           <Dialog.Title>add client</Dialog.Title>
-          <Dialog.Description>
+          <!-- <Dialog.Description>
             add new client here. Click save when you're done.
-          </Dialog.Description>
+          </Dialog.Description> -->
         </Dialog.Header>
         <div class="grid gap-4 py-4">
         <div class="grid grid-cols-4 items-center gap-4">
