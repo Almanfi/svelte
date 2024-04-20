@@ -27,23 +27,25 @@
 		<div class="sm:flex items-center justify-between space-y-2">
 			<h2 class="text-3xl font-bold tracking-tight">Dashboard</h2>
 			<div class="flex items-center justify-between space-x-2">
-				<DatePickerWithRange />
+				<!-- <DatePickerWithRange />
 				<Button size="sm">
 					<Download class="md:mr-2 mr-0 h-4 w-4" />
 					<p class="max-[400px]:hidden">
 						Download
 					</p>
-				</Button>
+				</Button> -->
 			</div>
 		</div>
 		<Tabs.Root value="overview" class="space-y-4">
 			<div class="w-full flex items-center justify-center md:justify-normal">
+				<!-- 
 				<Tabs.List class="w-fit">
 					<Tabs.Trigger class="px-1 sm:px-3" value="overview">Overview</Tabs.Trigger>
 					<Tabs.Trigger class="px-1 sm:px-3" value="analytics" disabled>Analytics</Tabs.Trigger>
 					<Tabs.Trigger class="px-1 sm:px-3" value="reports" disabled>Reports</Tabs.Trigger>
 					<Tabs.Trigger class="px-1 sm:px-3" value="notifications" disabled>Notifications</Tabs.Trigger>
 				</Tabs.List>
+				 -->
 			</div>
 			<Tabs.Content value="overview" class="space-y-4">
 				<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

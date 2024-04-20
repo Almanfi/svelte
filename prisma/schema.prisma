@@ -56,6 +56,7 @@ model Version {
 model AuthUser {
   id           String        @id @unique
   username     String        @unique
+  email        String?
   name         String
   created_at   DateTime      @default(now())
   userSubs     String?

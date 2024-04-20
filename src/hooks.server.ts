@@ -50,6 +50,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			event.locals.user = {
 				id: userInDb.id,
 				username: userInDb.username,
+				email: userInDb.email,
 				group: userInDb.userGroup.map((group) => group.name),
 			};
 	}

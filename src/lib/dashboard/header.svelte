@@ -21,7 +21,6 @@
         {name: "products", href: "/product"},
     ];
     
-    console.log("user data: ", data.user);
     $: {
         if (data.user?.group.includes("admin")) {
             navIteams = [
@@ -113,7 +112,7 @@
             </div>
             <nav class="flex items-center">
                 <DarkMode />
-                <UserNav />
+                <UserNav user={data.user}/>
             </nav>
         </div>
         {:else}
