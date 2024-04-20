@@ -69,3 +69,12 @@ export function formattedDate(date: string) {
       day: 'numeric',
     });
   }
+
+export function userIsAtLeast(user: any, group: string[]): boolean {
+    while (group.length > 0) {
+        if (user?.group?.includes(group.pop())) {
+        return true;
+        }
+    }
+    return false;
+}

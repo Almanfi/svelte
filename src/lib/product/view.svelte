@@ -8,6 +8,7 @@
     import { Textarea } from "$lib/components/ui/textarea";
    
     const productState = ["pending", "in progress", "done", "canceled"];
+    export let user: any = undefined;
     export let product : 
     {
         name: string,
@@ -45,6 +46,23 @@
       }
     }
 
+    function userIsAtLeast(user: any, group: string[]): boolean {
+      while (group.length > 0) {
+        if (user?.group?.includes(group.pop())) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function latestVersion(product: any): any {
+      return product.versions[product.versions.length - 1];
+    }
+
+    function isLatestVersion(version: any, product: any): boolean {
+      return version.id === latestVersion(product).id;
+    }
+    
     let editMode = false;
 
   </script>
@@ -91,6 +109,7 @@
 
           <div class="flex flex-col space-y-1.5">
             <Label for="version">version</Label>
+            {#if !editMode}
             <Select.Root bind:selected={selectedVersion} >
               <Select.Trigger id="version">
                 <Select.Value placeholder={versionToDisplay.version.toString()}/>
@@ -103,6 +122,9 @@
                 {/each}
               </Select.Content>
             </Select.Root>
+            {:else}
+            <div class=" border rounded-md p-[0.45rem] px-3 text-sm">{versionToDisplay.version.toString()}</div>
+            {/if}
           </div>
 
           <input id="id" name="id" hidden type="text" value={versionToDisplay.id} />
@@ -129,7 +151,7 @@
             </Select.Root>
             <input hidden id="state" name="state" value={selectedStateValue} />
             {:else}
-            <div class=" border rounded-md p-1">{versionToDisplay.state}</div>
+            <div class=" border rounded-md p-[0.45rem] px-3 text-sm">{versionToDisplay.state}</div>
             {/if}
           </div>
           <div class="flex flex-col space-y-1.5">
@@ -137,37 +159,37 @@
             {#if editMode}
             <Textarea id="note" name="note" placeholder={versionToDisplay.note} />
             {:else}
-            <div class=" border rounded-md p-1">{versionToDisplay.note}</div>
+            <div class=" border rounded-md p-[0.45rem] px-3 text-sm">{versionToDisplay.note}</div>
             {/if}
           </div>
           <div class="flex flex-col space-y-1.5">
             <Label for="startDate">startDate</Label>
-            {#if editMode}
+            {#if editMode && userIsAtLeast(user, ["admin", "sale"])}
             <DatePicker bind:date={startDate} oldDate={formattedDate(versionToDisplay.startDate)} />
             <input id="startDate" name="startDate" hidden type="text" bind:value={startDate} />
             {:else}
-            <div class=" border rounded-md p-1">
+            <div class=" border rounded-md p-[0.45rem] px-3 text-sm">
               {formattedDate(versionToDisplay.startDate)}
             </div>
             {/if}
           </div>
           <div class="flex flex-col space-y-1.5">
             <Label for="deadline">deadline</Label>
-            {#if editMode}
+            {#if editMode && userIsAtLeast(user, ["admin", "sale"])}
             <DatePicker bind:date={deadline} oldDate={formattedDate(versionToDisplay.deadline)}/>
             <input id="deadline" name="deadline" hidden type="text" bind:value={deadline}  />
             {:else}
-            <div class=" border rounded-md p-1">
+            <div class=" border rounded-md p-[0.45rem] px-3 text-sm">
               {formattedDate(versionToDisplay.deadline)}
             </div>
             {/if}
           </div>
           <div class="flex flex-col space-y-1.5">
             <Label for="atachement">atachement</Label>
-            {#if editMode}
+            {#if editMode && userIsAtLeast(user, ["admin", "sale"])}
             <Input name="atachement" id="atachement" type="file" placeholder={versionToDisplay.atachement} />
             {:else}
-            <div class=" border rounded-md p-1">
+            <div class=" border rounded-md p-[0.45rem] px-3 text-sm">
               {#if versionToDisplay.atachement}
                 <a href="/files/{versionToDisplay.atachement}">
                     {versionToDisplay.atachement}
@@ -179,17 +201,16 @@
             {/if}
           </div>
 
-
-
-
         </div>
       </Card.Content>
       <Card.Footer class="flex justify-between">
         {#if editMode}
         <Button on:click={() => {editMode=false}} variant="outline">Cancel</Button>
         <Button type="submit" class="ml-auto w-20">Save</Button>
+        {:else if isLatestVersion(versionToDisplay, product) || userIsAtLeast(user, ["admin"])}
+        <Button on:click={() => {editMode=true}} class="ml-auto w-20">Edit</Button>
         {:else}
-        <Button on:click={() => {editMode=true} } class="ml-auto w-20">Edit</Button>
+        <Button disabled class="ml-auto w-20 disabled:">can't Edit</Button>
         {/if}
       </Card.Footer>
     </form>
