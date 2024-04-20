@@ -5,6 +5,7 @@ import { redirect } from '@sveltejs/kit';
 import { lucia } from '$lib/server/lucia';
 import { generateId } from 'lucia';
 import { writeFileSync, unlink } from 'fs';
+import { sendNotificationToAllUsers } from '$lib/server/subscription';
 
 export const load: PageServerLoad = async (event) => {
     if (!event.locals.user) redirect(302, "/login");
@@ -49,6 +50,7 @@ export const actions: Actions = {
                     },
                 },
             });
+            sendNotificationToAllUsers(`new product: ${newProduct.name}`);
             return {
                 status: 201,
                 body: newProduct
@@ -147,6 +149,7 @@ export const actions: Actions = {
                     },
                 }
             });
+            sendNotificationToAllUsers(`new product: ${newProduct.name}`);
             return {
                 status: 201,
                 body: newProduct

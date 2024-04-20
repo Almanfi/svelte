@@ -1,6 +1,7 @@
 import type { PageServerLoad } from "./$types";
 import { Prisma } from '$lib/server/prisma';
 import { error, type Actions } from '@sveltejs/kit';
+import { sendNotificationToAllUsers } from '$lib/server/subscription';
 
 export const load: PageServerLoad = async ({ params }) => {
     console.log("fetching product..." + params.productId);
@@ -37,6 +38,7 @@ export const actions: Actions = {
                     name
                 }
             });
+            sendNotificationToAllUsers(`product updated: ${product.name}`);
             return {
                 status: 200
             };

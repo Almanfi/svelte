@@ -1,6 +1,7 @@
 import type { PageServerLoad } from "./$types";
 import { Prisma } from '$lib/server/prisma';
 import { error, type Actions } from '@sveltejs/kit';
+import { sendNotificationToAllUsers } from '$lib/server/subscription';
 
 export const load: PageServerLoad = async ({ params }) => {
     const getClient = async () => {
@@ -59,6 +60,7 @@ export const actions: Actions = {
                     email
                 }
             });
+            sendNotificationToAllUsers(`client updated: ${client.name}`);
             return {
                 status: 200
             };
