@@ -33,10 +33,10 @@
 </script>
 
 <Dialog.Root>
-    <Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
+    <Dialog.Trigger class="{buttonVariants({ variant: "outline" })} bg-card text-card-foreground shadow">
       add Client
     </Dialog.Trigger>
-      <Dialog.Content class="sm:max-w-[425px]">
+      <Dialog.Content class="sm:max-w-[425px] bg-card text-card-foreground shadow">
         <!-- <form on:submit|preventDefault={handleSubmit} action="/client?/createClient" method="post" use:enhance> -->
         <form action="/client?/createClient" method="post" 
         use:enhance={({ formData}) => {

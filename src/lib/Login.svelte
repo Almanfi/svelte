@@ -61,7 +61,7 @@
 							<div class="space-y-1">
 								<Label for={authData.password}>Password</Label>
 								<Input
-									placeholder="username"
+									placeholder="password"
 									id={authData.password}
 									name={authData.password}
 									type="password"
@@ -98,7 +98,7 @@
 							<div class="space-y-1">
 								<Label for={authData.password}>Password</Label>
 								<Input
-									placeholder="username"
+									placeholder="password"
 									id={authData.password}
 									name={authData.password}
 									type="password"

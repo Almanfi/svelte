@@ -14,7 +14,7 @@
 	// }];
 </script>
 
-<div class="rounded-md border my-4 mx-auto h-full">
+<div class="rounded-md border my-4 mx-auto h-full bg-card text-card-foreground shadow">
 	<Table.Root>
 		<Table.Header>
 			<Table.Row>
