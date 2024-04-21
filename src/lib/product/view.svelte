@@ -104,6 +104,8 @@
           <div class="flex flex-col space-y-1.5">
             <Label for="name">Name</Label>
             <div class=" border rounded-md p-1">{product.name}</div>
+            <input id="prodName" name="prodName" hidden type="text" value={product.name} />
+            <input id="prodId" name="prodId" hidden type="text" value={product.id} />
             <!-- <Input disabled id="name" placeholder={product.name} /> -->
           </div>
 

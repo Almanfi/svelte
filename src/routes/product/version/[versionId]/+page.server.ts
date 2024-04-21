@@ -3,6 +3,7 @@ import { Prisma } from '$lib/server/prisma';
 import { fail, error, type Actions } from '@sveltejs/kit';
 import { writeFileSync, unlink } from 'fs';
 import { generateId } from 'lucia';
+import { sendNotificationToAllUsers } from '$lib/server/subscription';
 
 export const load: PageServerLoad = async ({ params }) => {
     const getVersion = async () => {
@@ -31,7 +32,9 @@ export const actions: Actions = {
                 formData[key] = undefined;
             }
         }
-        let { note, state, atachement, startDate, deadline } = formData as {
+        let { prodId, prodName, note, state, atachement, startDate, deadline } = formData as {
+            prodId: string | undefined,
+            prodName: string | undefined,
             note: string | undefined,
             state: string | undefined,
             startDate: string | undefined,
@@ -60,7 +63,7 @@ export const actions: Actions = {
                         id: params.versionId
                     },
                     select: {
-                        atachement: true
+                        atachement: true,
                     }
                 });
                 console.log("-------- done geting old version ------------");
@@ -91,6 +94,21 @@ export const actions: Actions = {
                 });
                 console.log("-------- done deleting old file ------------");
             }
+            if (!prodName) {
+                if (!prodId) {
+                    return fail(400, { message: 'Missing product info' });
+                }
+                let product = await Prisma.product.findFirst({
+                    where: {
+                        id: prodId
+                    }
+                });
+                if (!product) {
+                    return fail(404, { message: 'Product not found' });
+                }
+                prodName = product.name;
+            }
+            sendNotificationToAllUsers(`product ${prodName} v-${version.version} updated.`)
             return {
                 status: 200,
                 body: version,

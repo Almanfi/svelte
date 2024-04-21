@@ -27,6 +27,7 @@
               // console.log("returned client data: " + JSON.stringify(newClient));
               // $clients = [...$clients, newClient];
               update();
+              toast("password updated succesfuly")
             }
             else {
                 toast("client creation failed", {

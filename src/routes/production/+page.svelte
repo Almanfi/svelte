@@ -88,7 +88,7 @@
 
 <h1 class="mx-auto text-center my-4">Available products</h1>
 
-<div class="rounded-md border max-w-[90%] m-auto">
+<div class="rounded-md border max-w-[90%] m-auto bg-card text-card-foreground shadow">
   <Table.Root >
     <Table.Header>
       <Table.Row>

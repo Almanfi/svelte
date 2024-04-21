@@ -3,7 +3,14 @@ import { fail, redirect } from "@sveltejs/kit";
 import { Argon2id } from "oslo/password";
 import { Prisma as prisma } from "$lib/server/prisma";
 
-import type { Actions } from "./$types";
+import type { Actions, PageServerLoad } from "./$types";
+
+export const load: PageServerLoad = async (event) => {
+    let user = event.locals.user;
+	if (user)
+		redirect(302, "/");
+    return;
+};
 
 export const actions: Actions = {
 

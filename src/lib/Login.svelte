@@ -9,28 +9,55 @@
 	// let email = '';
 	// let password = '';
 
-	function validate(event) {
-		console.log('handleSubmit called');
-		const response = {
-			ok: true
-		};
+	// function validate(event) {
+	// 	console.log('handleSubmit called');
+	// 	console.log(event);
+	// 	return;
+	// 	const response = event.response;
 
-		if (response.ok) {
-			alert('Logged in!');
-			// Handle successful login
-		} else {
-			const data = 'false';
-			alert(`Login failed: ${data}`);
-			// Handle error
-		}
-	}
+	// 	if (response.ok) {
+	// 		console.log(response);
+	// 		alert('Logged in!');
+	// 		// Handle successful login
+	// 	} else {
+	// 		const data = 'false';
+	// 		alert(`Login failed: ${data}`);
+	// 		// Handle error
+	// 	}
+	// }
 	import Container from '$lib/container.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Card from '$lib/components/ui/card/index';
 	import { Button } from '$lib/components/ui/button/index';
 	import { Input } from '$lib/components/ui/input/index';
 	import { Label } from '$lib/components/ui/label/index';
+	import { toast } from "svelte-sonner";
 </script>
+
+<!-- <form action="/user?/updateInfo" method="post" 
+        use:enhance={({ formData}) => {
+
+          return async ({ result, update }) => {
+            if (result.type === "success" && result.data) {
+              console.log("submitted data with success");
+              let newClient = result.data.body;
+              // console.log("returned client data: " + JSON.stringify(newClient));
+              // $clients = [...$clients, newClient];
+              update();
+              toast("info updated succesfuly")
+            }
+            else {
+                toast("client creation failed", {
+                description: result.data.message,
+                // action: {
+                //   label: "Undo",
+                //   onClick: () => console.log("Undo")
+                // }
+              })
+              console.log("error: " + JSON.stringify(result));
+            }
+          };
+        }}> -->
 
 <div class="flex min-h-full flex-col justify-center px-6 py-8 lg:px-8">
 	<div class="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -42,7 +69,20 @@
 			</Tabs.List>
 			<Tabs.Content value="login">
 				<Card.Root>
-					<form action={loginApi} method="post" on:submit|preventDefault={validate} use:enhance>
+					<form action={loginApi} method="post"
+					use:enhance={({ formData}) => {
+			
+						return async ({ result, update }) => {
+						if (result.type === "failure") {
+							toast("credentials are incorrect", {
+								type: "error",
+							})
+						}
+						else {
+							update();
+						}
+						};
+					}}>	
 						<Card.Header>
 							<Card.Title>Log in</Card.Title>
 							<Card.Description>log in to your account</Card.Description>
@@ -70,16 +110,26 @@
 							</div>
 						</Card.Content>
 						<Card.Footer>
-							<Button type="submit" class="w-full" on:click={() => console.log('clicked')}
-								>log in</Button
-							>
+							<Button type="submit" class="w-full">log in</Button>
 						</Card.Footer>
 					</form>
 				</Card.Root>
 			</Tabs.Content>
 			<Tabs.Content value="sign in">
 				<Card.Root>
-					<form action={signupApi} method="post" on:submit|preventDefault={validate} use:enhance>
+					<form action={signupApi} method="post"
+					use:enhance={({ formData}) => {
+						return async ({ result, update }) => {
+						if (result.type === "failure") {
+							toast("credentials are incorrect", {
+								type: "error",
+							})
+						}
+						else {
+							update();
+						}
+						};
+					}}>		
 						<Card.Header>
 							<Card.Title>Sign in</Card.Title>
 							<Card.Description>create acount</Card.Description>
