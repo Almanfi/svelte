@@ -104,8 +104,10 @@
 									let newClient = result.data.body;
 									products = [...products, newClient];
 									update();
+									document.getElementById('newOrderCloser')?.click();
+									toast('product created successfully');
 								} else {
-									toast('client creation failed', {
+									toast('product creation failed', {
 										description: result.data.message
 									});
 									console.log('error: ' + JSON.stringify(result));
@@ -157,6 +159,7 @@
 						</div>
 
 						<Dialog.Footer class="my-2">
+							<Dialog.Close class="hidden" id="newOrderCloser">Cancel</Dialog.Close>
 							<Button type="submit">Save changes</Button>
 						</Dialog.Footer>
 					</form>

@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from "./$types"
 import { fail } from '@sveltejs/kit';
-import { Prisma } from '$lib/server/prisma';
+import { Prisma as prisma } from '$lib/server/prisma';
 import { redirect } from '@sveltejs/kit';
 import { lucia } from '$lib/server/lucia';
 import { generateId } from 'lucia';
@@ -11,7 +11,7 @@ export const load: PageServerLoad = async (event) => {
     if (!event.locals.user) redirect(302, "/login");
     return {
         username : event.locals.user.username,
-        clients : await Prisma.client.findMany()
+        clients : await prisma.client.findMany()
     }
 };
 
@@ -70,7 +70,7 @@ export const actions: Actions = {
                 }
             }
             const id = generateId(15);
-            const newversion = await Prisma.version.create({
+            const newversion = await prisma.version.create({
                 data: {
                     id,
                     note,
@@ -102,7 +102,7 @@ export const actions: Actions = {
         if (!id) {
             return fail(400, { message: 'Missing id' });
         }
-        let version = await Prisma.version.findUnique({
+        let version = await prisma.version.findUnique({
             where: {
                 id: id
             }
@@ -111,7 +111,7 @@ export const actions: Actions = {
             return fail(500, { message: 'version not found' });
         }
         try {
-            await Prisma.version.delete({
+            await prisma.version.delete({
                 where: {
                     id: id
                 }
