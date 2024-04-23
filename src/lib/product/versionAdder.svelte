@@ -20,17 +20,13 @@
 				<Dialog.Description>add new version here. Click save when you're done.</Dialog.Description>
 			</Dialog.Header>
 			<div class="grid gap-4 py-4">
-				<div class="grid grid-cols-4 items-center gap-4">
-					<Label for="name" class="text-right">Name</Label>
-					<Input name="name" id="name" class="col-span-3" />
-				</div>
 				{#if product}
 					<input type="hidden" name="productId" bind:value={product.id} />
 				{/if}
 			</div>
 			<Dialog.Footer>
 				<Dialog.Close>
-					<Button type="submit">add product</Button>
+					<Button type="submit">yes</Button>
 				</Dialog.Close>
 			</Dialog.Footer>
 		</form>

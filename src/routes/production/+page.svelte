@@ -9,6 +9,8 @@
 
     import { products as allProducts } from '$lib/store';
     import * as Table from "$lib/components/ui/table/index.js";
+    import { Loader, X, Check, Sparkles, CheckCheck, OctagonAlert, FileText, Ban, Timer } from 'lucide-svelte';
+
 
     export let data: PageData;
 
@@ -57,10 +59,11 @@
       };
     };
     
-    const productState = ["pending", "in progress", "done", "canceled"];
+    const productState = ["in progress", "done", "canceled"];
     
     let openProduct = undefined;
-    let viewedProduct: {
+    let viewedProductVersion: {
+      productName: string,
       productId: string,
       name: string,
       id: string,
@@ -77,11 +80,15 @@
       console.log(id);
 
       openProduct = products.find(product => product.id === id);
-      viewedProduct = {name: openProduct.name,
+      viewedProductVersion = {productName: openProduct.name,
               productId: openProduct.id,
               ...openProduct.versions[openProduct.versions.length - 1]};
-      console.log(viewedProduct);
-      selectedState = {value: viewedProduct.state}
+      console.log(viewedProductVersion);
+      selectedState = {value: viewedProductVersion.state}
+    }
+
+    function findStatus(product) {
+      return product.versions[product.versions.length - 1].state;
     }
     
 </script>
@@ -96,8 +103,12 @@
         <Table.Head class="">name</Table.Head>
         <Table.Head class="text-center">version</Table.Head>
         <Table.Head class="text-center">status</Table.Head>
-        <!-- <Table.Head class="text-center">start Date</Table.Head>
-        <Table.Head class="text-center">deadline</Table.Head> -->
+        <Table.Head class="text-center hidden sm:table-cell">start Date</Table.Head>
+        <Table.Head class="text-center hidden sm:table-cell">deadline</Table.Head>
+        <Table.Head class="text-center sm:hidden table-cell">
+          <Timer class="m-auto w-4 h-6 font-bold" />
+        </Table.Head>
+        <Table.Head class="text-center  sm:table-cell">file</Table.Head>
       </Table.Row>
     </Table.Header>
     <Table.Body>
@@ -112,9 +123,36 @@
         {:else}
         <Table.Cell class="text-center">0</Table.Cell>
         {/if}
-        <Table.Cell class="text-center">{product.versions[product.versions.length - 1].state}</Table.Cell>
-        <!-- <Table.Cell class="text-center">{formattedDate(product.versions[product.versions.length - 1].startDate)}</Table.Cell>
-        <Table.Cell class="text-center">{formattedDate(product.versions[product.versions.length - 1].deadline)}</Table.Cell> -->
+        <Table.Cell class="text-center">
+          {#if findStatus(product) === 'in progress'}
+          <Loader class="m-auto w-6 h-6 text-blue-500" />
+          {:else if findStatus(product) === 'done'}
+          <Check class="m-auto w-6 h-6 text-green-500" />
+          {:else if findStatus(product) === 'pending'}
+          <Sparkles class="m-auto w-6 h-6 text-yellow-500" />
+          {:else if findStatus(product) === 'valid'}
+          <CheckCheck class="m-auto w-6 h-6 text-emerald-500" />
+          {:else if findStatus(product) === 'not valid'}
+          <OctagonAlert class="m-auto w-6 h-6 text-red-700" />
+          {:else}
+          <X class="m-auto w-6 h-6 text-red-500" />
+          {/if}
+        </Table.Cell>
+        <!-- <Table.Cell class="text-center">{findStatus(product)}</Table.Cell> -->
+        {#if product.client}
+        <Table.Cell class="text-center hidden sm:table-cell">{product.client.name}</Table.Cell>
+        {/if}
+        <Table.Cell class="text-center hidden sm:table-cell">{formattedDate(product.versions[product.versions.length - 1].startDate)}</Table.Cell>
+        <Table.Cell class="text-center">{formattedDate(product.versions[product.versions.length - 1].deadline)}</Table.Cell>
+        <Table.Cell class="text-center  sm:table-cell">
+        {#if product.versions[product.versions.length - 1].atachement}
+          <a href="/files/{product.versions[product.versions.length - 1].atachementt}">
+            <FileText class="m-auto text-green-500"/>
+          </a>
+          {:else}
+          <Ban class="m-auto text-red-500"/>
+          {/if}
+        </Table.Cell>
       </Table.Row>
     {/each}
     </Table.Body>
@@ -125,13 +163,13 @@
   <Drawer.Trigger id="drawerOpener" class="hidden">Open</Drawer.Trigger>
   <Drawer.Content>
     <Drawer.Header>
-      <a href="/product/{viewedProduct.productId}">
-        <Drawer.Title>{viewedProduct.name} - {viewedProduct.version.toString()}</Drawer.Title>
+      <a href="/product/{viewedProductVersion.productId}">
+        <Drawer.Title>{viewedProductVersion.productName} - {viewedProductVersion.version.toString()}</Drawer.Title>
       </a>
       <Drawer.Description>click product name to visit it's page</Drawer.Description>
     </Drawer.Header>
 
-    <form action="/product/version/{viewedProduct.id}?/updateVersion" method="post" enctype="multipart/form-data"
+    <form action="/product/version/{viewedProductVersion.id}?/updateVersion" method="post" enctype="multipart/form-data"
     use:enhance={({ formData, cancel}) => {
       console.log("-----------------------------");
       const plainFormData = Object.fromEntries(formData.entries());
@@ -144,9 +182,9 @@
           let newData = result.data.body;
           console.log("returned data: " + JSON.stringify(newData));
           console.log("--------------- version is : " + newData.version);
-          products = products.map(product => 
-            product.id === viewedProduct.productId 
-              ? { ...product, versions: product.versions.map((version) => version.version === newData.version ? newData : version) }
+          products = products.map(product =>
+            product.id === viewedProductVersion.productId
+              ? { ...product, versions: product.versions.map((version) => version.version === newData.version ? newData : version)}
               : product
           );
         update();
@@ -162,7 +200,12 @@
     <Card.Content>
         <div class="grid w-full items-center">
 
-          <input id="id" name="id" hidden type="text" value={viewedProduct.id} />
+
+          <input id="prodName" name="prodName" hidden type="text" value={viewedProductVersion.productName} />
+
+          <input id="prodId" name="prodId" hidden type="text" value={viewedProductVersion.productId} />
+
+          <input id="id" name="id" hidden type="text" value={viewedProductVersion.id} />
           
           <div class="flex flex-col space-y-1.5 my-4">
             <Select.Root name="state"
@@ -188,7 +231,7 @@
           {#if selectedState.value === "canceled"}
           <div class="flex flex-col space-y-1.5" transition:slideFade={{duration: 400}}>
             <Label for="note">Note</Label>
-            <Textarea required id="note" name="note" placeholder={viewedProduct.note} />
+            <Textarea required id="note" name="note" placeholder={viewedProductVersion.note} />
           </div>
           {/if}
 

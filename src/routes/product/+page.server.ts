@@ -147,6 +147,10 @@ export const actions: Actions = {
                             id: clientId,
                         },
                     },
+                },
+                include: {
+                    versions: true,
+                    client: true,
                 }
             });
             sendNotificationToAllUsers(`new product: ${newProduct.name}`);
