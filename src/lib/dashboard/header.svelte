@@ -57,6 +57,11 @@
                 {name: "production", href: "/production"},
             ];
         }
+        else {
+            navIteams = [
+                {name: "Home", href: "/"},
+            ];
+        }
     }
 </script>
 
